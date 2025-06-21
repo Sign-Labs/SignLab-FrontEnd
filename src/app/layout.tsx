@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   title: "Sign Laboratory",
   description: "Learning as a service for sign language",
   icons: {
-    icon: './profile.jpg',
+    icon: "/profile.jpg",           
+    apple: "/apple-touch-icon.png",
   },
 };
 
