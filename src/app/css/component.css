@@ -1,0 +1,14 @@
+
+.login_container_outer {
+    background-color: blue;
+    display: flex;
+    flex-direction: row;     
+    justify-content: center; 
+    align-items: center;
+    gap: 30px;
+    margin-top: 50px;
+    flex-grow: 1;
+    width: 90%;
+    height: 75%;
+    padding: 20px;
+}

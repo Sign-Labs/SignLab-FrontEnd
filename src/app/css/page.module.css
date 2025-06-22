@@ -6,7 +6,7 @@
   align-items: center; /* ใส่เพิ่มเพื่อให้เนื้อหาอยู่ตรงกลาง */
   /* background-color: purple; */
   width: 100%;
-  max-width: 1200px; /* จำกัดความกว้างสูงสุด */
+  max-width: 1800px;  
   margin: 0 auto; /* จัดให้อยู่ตรงกลาง */
 }
 
@@ -14,22 +14,23 @@
   /* background-color: red; */
   display: flex;           
   flex-direction: row; 
-  border-bottom: 1px solid lightgray; 
+  /* border-bottom: 1px solid lightgray;  */
   justify-content: space-between; 
   align-items: center;
   text-align: center;
-  width: 90%;
+  width: 100%;
   padding: 15px;
-  height: auto;
+  height: 100;
 }
 
 .containerbottom {
-  /* background-color: blue; */
+  background-color: blue;
   display: flex;
   flex-direction: row;     
   justify-content: center; 
   align-items: center;
   gap: 30px;
+  margin-top: 50px;
   flex-grow: 1;
   width: 90%;
   height: 75%;
@@ -60,7 +61,7 @@
 
 .title2 {
   font-size: var(--font-icon);
-  color: var(--foreground);
+  color: var(--skyblue);
 }
 
 .acc_text {
@@ -68,14 +69,13 @@
   color: var(--foreground);
   /* font-weight: 700; */
 }
-
 .acc_text:hover {
   color: var(--white);
   transition: all 0.3s ease-in-out;
 }
 .start_text {
   font-size: var(--font-description);
-  color: var(--foreground);
+  color: var(--background);
  
 }
 .start_text:hover {
@@ -116,7 +116,6 @@
   border-color: var(--lightgreen);
 }
 
-/* Media Queries สำหรับความ Responsive */
 @media (max-width: 1200px) {
   .title, .title2 {
     font-size: calc(var(--font-icon) * 0.9);
@@ -126,6 +125,7 @@
 @media (max-width: 992px) {
   .title, .title2 {
     font-size: calc(var(--font-icon) * 0.8);
+    
   }
   .containercenter {
     width: 450px;

@@ -8,6 +8,7 @@
   --softorange: #FFC48C;
   --skyblue: #6EC1E4;
   --font-icon: 60px;
+  --iconsize: 45px;
   --font-menu-size: 25px;
   --font-description: 20px;
   --frame-2p-width: 746;
@@ -47,9 +48,4 @@ body {
   padding : 0;
   
 }
-
-/* a {
-  color: inherit;
-  text-decoration: none;
-} */
 
