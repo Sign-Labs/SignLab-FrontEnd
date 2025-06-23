@@ -1,4 +1,6 @@
 "use client"
+import "./css/container.css"; 
+import "./css/component.css";
 import styles from "./css/page.module.css";
 import { useRouter } from "next/navigation";
 
@@ -10,17 +12,17 @@ export default function Home() {
   }
   
   return (
-    <main className={styles.container}>
-      <div className={styles.containertop}>
-        <h1 className={styles.title}>Sign Lab</h1>
-        <button className={styles.register_button} onClick={() => handleClick("login")}>
-          <h1 className={styles.acc_text}>ฉันมีบัญชีอยู่แล้ว</h1>
+    <main className="first_container_outer">
+      <div className="first_container_top">
+        <h1 className="font_heading">Sign Lab</h1>
+        <button className="first_button_register" onClick={() => handleClick("login")}>
+          <h1 className="first_Text_Account">ฉันมีบัญชีอยู่แล้ว</h1>
         </button>
       </div>
-      <div className={styles.containerbottom}>
+      <div className="first_container_bottom">
         <img src={"./picintro.png"} alt="Introduction" />
-        <div className={styles.containercenter}>
-          <h1 className={styles.title2}>เรียนภาษามือง่าย ๆ ได้ทุกที่ ทุกเวลา</h1>
+        <div className="first_container_bottom_left">
+          <h1 className="font_heading_Skyblue">เรียนภาษามือง่าย ๆ ได้ทุกที่ ทุกเวลา</h1>
           <button className={styles.next_button} onClick={() => handleClick("register")}>
             <h1 className={styles.start_text}>มาเริ่มกันเลย</h1>
           </button>
