@@ -1,14 +1,27 @@
-
-.login_container_outer {
-    background-color: blue;
-    display: flex;
-    flex-direction: row;     
-    justify-content: center; 
-    align-items: center;
-    gap: 30px;
-    margin-top: 50px;
-    flex-grow: 1;
-    width: 90%;
-    height: 75%;
-    padding: 20px;
+.font_heading
+{
+  font-size: var(--font-heading);
+  color: var(--foreground);
+}
+.font_heading_Skyblue
+{
+  font-size: var(--font-heading);
+  color: var(--skyblue);
+}
+.first_Text_Account
+{
+  font-size: var(--font-description);
+  color: var(--skyblue);
+}
+.first_button_register
+{
+  width: 200px;
+  height: 60px;
+  background-color: var(--white);
+  color: var(--foreground);
+  border: 3px solid lightgray;
+  border-radius: 20px;
+  font-size: var(--font-menu-size);
+  cursor: pointer;
+  transition: all 0.3s ease; 
 }

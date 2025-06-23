@@ -7,7 +7,13 @@
   --lightgreen:#A7E9AF;
   --softorange: #FFC48C;
   --skyblue: #6EC1E4;
-  --font-icon: 60px;
+  --font-heading: 60px;
+  --font-botton: 20px;
+
+
+
+
+
   --iconsize: 45px;
   --font-menu-size: 25px;
   --font-description: 20px;
@@ -15,7 +21,6 @@
   --frame-2p-height: 746;
 
 }
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #FFF8E7;
@@ -42,10 +47,8 @@ body {
 }
 
 * {
-  
   box-sizing: border-box;
   margin: 0;
   padding : 0;
-  
 }
 
