@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./css/central.css";
-
+import "./css/container.css";
+import "./css/component.css";
 
 export const metadata: Metadata = {
   title: "Sign Laboratory",
