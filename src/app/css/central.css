@@ -9,16 +9,15 @@
   --skyblue: #6EC1E4;
   --font-heading: 60px;
   --font-botton: 20px;
-
-
-
-
-
   --iconsize: 45px;
   --font-menu-size: 25px;
   --font-description: 20px;
   --frame-2p-width: 746;
   --frame-2p-height: 746;
+  --light-font:300;
+  --regular-font:400;
+  --medium-font:500;
+  --bold-font:700;
 
 }
 @media (prefers-color-scheme: dark) {
