@@ -1,7 +1,7 @@
 "use client"
 import "./css/container.css"; 
 import "./css/component.css";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"; 
 
 export default function Home() {
   const router = useRouter();

@@ -1,11 +1,16 @@
 "use client";
 import { AiOutlineLeft } from "react-icons/ai";
+import { useRouter } from "next/navigation"; 
 import "../css/component.css"; 
 import "../css/container.css";
 
 
 export default function Login() {
-   
+    const rounter = useRouter();
+    const handdlelogin = (massage:string) =>
+    {
+        rounter.push(`/${massage}`);
+    }
     return (
         <main className="container_outer">
             <div className="container_top">
@@ -23,11 +28,11 @@ export default function Login() {
                         <input type="email" placeholder="อีเมล" className="input_button" />
                         <input type="password" placeholder="รหัสผ่าน" className="input_button" />
                         <div style={{justifyContent: "center",alignItems: "center",display: "flex",flexDirection: "column"}}>
-                        <button className="first_button_getstart">
+                        <button className="first_button_getstart" onClick={() => handdlelogin("home")}>
                             <h1 className="font_description_white normal">เข้าสู่ระบบ</h1>
                             </button>
-                        
-                        <h1 className="font_description light">ลืมรหัสผ่าน?</h1>
+                            <a href="/forgot"><h1 className="font_description light">ลืมรหัสผ่าน?</h1></a>
+        
                         </div>
                     </div>
                 </div>
