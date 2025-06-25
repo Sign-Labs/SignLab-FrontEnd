@@ -1,0 +1,94 @@
+
+.container_outer {
+  /*ทั้งกระดาน*/
+    display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  flex-direction: column;
+  align-items: center; 
+  background-color: purple;
+  width: 100%;
+  max-width: 1800px;  
+  margin: 0 auto; 
+}
+.container_top {
+    /* SignLab ฉันมีบัญชีอยู่แล้ว*/
+    display: flex;           
+    flex-direction: row; 
+    background-color: red;
+    justify-content: space-between; 
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding: 15px;
+    height: 100;
+}
+.container_bottom {
+    /* รูป*/
+    display: flex;
+    background-color: green;
+    flex-direction: row;     
+    justify-content: center; 
+    align-items: center;
+    gap: 30px;
+    margin-top: 50px;
+    flex-grow: 1;
+    width: 90%;
+    height: 75%;
+    padding: 20px;
+}
+.first_container_bottom_left {
+    /*เรียนภาษามือพร้อมกับ ปุ่ม มาเริ่มกันเลย*/
+    background-color: blue;
+  display: flex;           
+  flex-direction: column;     
+  justify-content: space-between; 
+  align-items: center;
+  text-align: center;
+  gap: 30px;
+  width: 500px; 
+}
+
+
+.login_container_outer {
+    background-color: blue;
+    display: flex;
+    flex-direction: column;     
+    justify-content: center; 
+    align-items: center;
+    gap: 30px;
+    margin-top: 50px;
+    flex-grow: 1;
+    width: 90%;
+    height: 75%;
+    padding: 20px;
+}
+.login_container_inner {
+    background-color: red;
+    display: flex;           
+    flex-direction: row; 
+    /* border-bottom: 1px solid lightgray;  */
+    justify-content: left; 
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+    width: 80%;
+    padding: 15px;
+    height: auto;
+  }
+  .login_container_inner_right {
+    background-color: rgb(123, 218, 59);
+    display: flex;
+    flex-direction: column;     
+    justify-content: left; 
+    align-items: left;
+    text-align: left;
+    padding-left: 10px;
+    
+    gap: 10px;
+    margin-top: 50px;
+    flex-grow: 1;
+    width: auto;
+    height: auto;
+   
+  }

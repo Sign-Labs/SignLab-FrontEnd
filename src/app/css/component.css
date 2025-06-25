@@ -1,0 +1,93 @@
+.light
+{
+  font-weight: var(--light-font);
+}
+.normal
+{
+  font-weight: var(--regular-font);
+}
+.medium
+{
+  font-weight: var(--medium-font);
+}
+.bold
+{
+  font-weight: var(--bold-font);
+}
+.font_heading
+{
+  font-size: var(--font-heading);
+  color: var(--foreground);
+}
+.font_heading_Skyblue
+{
+  font-size: var(--font-heading);
+  color: var(--skyblue);
+}
+.font_description
+{
+  font-size: var(--font-description);
+  color: var(--foreground);
+}
+.font_description_white
+{
+  font-size: var(--font-description);
+  color: var(--background);
+}
+.font_description_Skyblue
+{
+  font-size: var(--font-description);
+  color: var(--skyblue);
+}
+.first_button_register
+{
+  width: 200px;
+  height: 60px;
+  background-color: var(--white);
+  color: var(--foreground);
+  border: 3px solid lightgray;
+  border-radius: 20px;
+  font-size: var(--font-menu-size);
+  cursor: pointer;
+  transition: all 0.3s ease; 
+}
+.first_button_register:hover
+{
+  background-color: var(--lightgreen);
+  color: var(--lightgreen);
+  border-color: var(--lightgreen);
+}
+.first_button_getstart
+{
+  width: 200px;
+  height: 60px;
+  background-color: var(--skyblue);
+  color: var(--foreground);
+  border: 3px solid lightgray;
+  border-radius: 20px;
+  font-size: var(--font-menu-size);
+  cursor: pointer;
+  transition: all 0.3s ease; 
+}
+.first_button_getstart:hover
+{
+  background-color: var(--lightgreen); 
+  color: var(--lightgreen);
+  border-color: var(--lightgreen);
+}
+.input_button {
+  width: 90%;
+  height: 60px;
+  background-color: var(--white);
+  color: var(--foreground);
+  border: none; 
+  outline: 3px solid lightgray; 
+  outline-offset: 0px;
+  border-radius: 50px;
+  font-size: var(--font-menu-size);
+  padding: 0 20px; 
+  cursor: pointer;
+  transition: all 0.3s ease; 
+}
+
+
