@@ -75,9 +75,18 @@
   color: var(--lightgreen);
   border-color: var(--lightgreen);
 }
+.back-button {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  stroke-width: 30px;
+  color: #171717;
+}
 .input_button {
   width: 90%;
   height: 60px;
+  margin-bottom: 10px;
   background-color: var(--white);
   color: var(--foreground);
   border: none; 
