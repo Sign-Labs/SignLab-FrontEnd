@@ -113,8 +113,32 @@
     justify-content: center; 
     align-items: center;
 
+    
     text-align: center;
     width: 100%;
     padding: 15px;
     height: auto;
   }
+  .otp_container_center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh; /* ความสูงขั้นต่ำ 80% ของหน้าจอ */
+    padding: 20px;
+}
+
+.otp_white_box {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* เงาอ่อนๆ */
+    padding: 40px;
+    width: 100%;
+    max-width: 450px; /* ความกว้างสูงสุด */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
