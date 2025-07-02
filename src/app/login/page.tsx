@@ -39,7 +39,7 @@ export default function Login() {
                                 <button type= "submit" className="first_button_getstart" onClick={() => Login()}>
                                     <h1 className="font_description_white normal">เข้าสู่ระบบ</h1>
                                 </button>
-                                <a href="/forgot" style={{textDecoration:"none"}}><h1 className="font_description light">ลืมรหัสผ่าน?</h1></a>
+                                <h1 className="font_description "><a href="/forgot" className="otp_resend_link">ลืมรหัสผ่าน?</a></h1>
                             </div>
                         </form>
                     </div>
