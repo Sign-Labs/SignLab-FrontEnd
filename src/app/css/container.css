@@ -6,6 +6,7 @@
   align-content: center;
   flex-direction: column;
   align-items: center; 
+  justify-content: center;
   /* background-color: purple; */
   width: 100%;
   max-width: 1800px;  
@@ -103,5 +104,17 @@
     flex-grow: 1;
     width: auto;
     height: auto;
-   
+  }
+  .forgot_container_form
+  {
+    /* background-color: red; */
+    display: flex;           
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+
+    text-align: center;
+    width: 100%;
+    padding: 15px;
+    height: auto;
   }
