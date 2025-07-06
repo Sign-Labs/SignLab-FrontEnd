@@ -2,8 +2,8 @@
 import { AiOutlineLeft } from "react-icons/ai";
 import { useRouter } from "next/navigation"; 
 import { useState } from "react";
-import "../../css/component.css"; 
-import "../../css/container.css"; 
+import "./../css/component.css"; 
+import "./../css/container.css"; 
 
 export default function otp() {
      const router = useRouter();
