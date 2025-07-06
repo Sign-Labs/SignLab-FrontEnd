@@ -6,7 +6,8 @@
   align-content: center;
   flex-direction: column;
   align-items: center; 
-  background-color: purple;
+  justify-content: center;
+  /* background-color: purple; */
   width: 100%;
   max-width: 1800px;  
   margin: 0 auto; 
@@ -15,7 +16,7 @@
     /* SignLab ฉันมีบัญชีอยู่แล้ว*/
     display: flex;           
     flex-direction: row; 
-    background-color: red;
+    /* background-color: red; */
     justify-content: space-between; 
     align-items: center;
     text-align: center;
@@ -26,7 +27,7 @@
 .container_bottom {
     /* รูป*/
     display: flex;
-    background-color: green;
+    /* background-color: green; */
     flex-direction: row;     
     justify-content: center; 
     align-items: center;
@@ -37,9 +38,22 @@
     height: 75%;
     padding: 20px;
 }
+.login_container_top {
+  /* SignLab ฉันมีบัญชีอยู่แล้ว*/
+  display: flex;           
+  flex-direction: row; 
+  /* background-color: red; */
+  justify-content: center; /* เปลี่ยนเป็น center เพื่อให้เนื้อหาอยู่ตรงกลาง */
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 15px;
+  height: 100px; /* เพิ่ม px */
+  position: relative; /* เพิ่มเพื่อให้สามารถทำ absolute positioning ได้ */
+}
 .first_container_bottom_left {
     /*เรียนภาษามือพร้อมกับ ปุ่ม มาเริ่มกันเลย*/
-    background-color: blue;
+    /* background-color: blue; */
   display: flex;           
   flex-direction: column;     
   justify-content: space-between; 
@@ -51,7 +65,7 @@
 
 
 .login_container_outer {
-    background-color: blue;
+    /* background-color: blue; */
     display: flex;
     flex-direction: column;     
     justify-content: center; 
@@ -64,7 +78,7 @@
     padding: 20px;
 }
 .login_container_inner {
-    background-color: red;
+    /* background-color: red; */
     display: flex;           
     flex-direction: row; 
     /* border-bottom: 1px solid lightgray;  */
@@ -77,7 +91,7 @@
     height: auto;
   }
   .login_container_inner_right {
-    background-color: rgb(123, 218, 59);
+    /* background-color: rgb(123, 218, 59); */
     display: flex;
     flex-direction: column;     
     justify-content: left; 
@@ -90,5 +104,41 @@
     flex-grow: 1;
     width: auto;
     height: auto;
-   
   }
+  .forgot_container_form
+  {
+    /* background-color: red; */
+    display: flex;           
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+
+    
+    text-align: center;
+    width: 100%;
+    padding: 15px;
+    height: auto;
+  }
+  .otp_container_center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh; /* ความสูงขั้นต่ำ 80% ของหน้าจอ */
+    padding: 20px;
+}
+
+.otp_white_box {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* เงาอ่อนๆ */
+    padding: 40px;
+    width: 100%;
+    max-width: 450px; /* ความกว้างสูงสุด */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
