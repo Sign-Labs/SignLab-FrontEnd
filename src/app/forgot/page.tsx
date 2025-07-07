@@ -13,7 +13,7 @@ export default function Forgot() {
     const handleChangePassword = () => {
         if (password === confirmPassword && password !== "" && confirmPassword !== "" && email !== "") {
             alert("รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว");
-            router.push("/forgot/otp");
+            router.push("/otp");
         } else {
             alert("รหัสผ่านไม่ถูกต้อง");
         }
