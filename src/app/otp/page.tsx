@@ -8,6 +8,7 @@ import "./../css/container.css";
 export default function otp() {
      const router = useRouter();
     const [otp, setOtp] = useState(["", "", "", ""]);
+    const [email, setEmail] = useState("Clienttest@gmail.com");
 
     const handleOtpChange = (index:number, value:string) => {
         if (value.length <= 1) {
@@ -40,8 +41,10 @@ export default function otp() {
             <div className="otp_container_center">
                 
                 <div className="otp_white_box">
-                    <h1 className="font_heading">กรอกรหัส OTP</h1>
-                    
+                    <div>
+                        <h1 className="font_heading">กรอกรหัส OTP</h1>
+                        <p className="font_description" >รหัสผ่านได้ถูกส่งไปยังอีเมล <strong>{email}</strong></p>
+                    </div>
                     <div className="otp_inputs_container">
                         {otp.map((digit, index) => (
                             <input

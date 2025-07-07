@@ -13,7 +13,7 @@ export default function Login() {
     const Login = () =>
     {
         if (email === "admin" && password === "admin") {
-            rounter.push(`/home`);
+            rounter.push(`/lessons`);
         }
         else {
             alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
