@@ -14,10 +14,29 @@
 {
   font-weight: var(--bold-font);
 }
+.white
+{
+  color: var(--white);
+}
+.skyblue
+{
+  color: var(--skyblue);
+}
+.lightgreen
+{
+  color: var(--lightgreen);
+}
+.background
+{
+  background-color: var(--background);
+}
+.foreground
+{
+  color: var(--foreground);
+}
 .font_heading
 {
   font-size: var(--font-heading);
-  color: var(--foreground);
 }
 .font_heading_Skyblue
 {
@@ -204,6 +223,7 @@ input[type="date"].input_button {
   background-color: var(--lightgreen);
   color: var(--foreground);
 }
+
 
 .react-datepicker__current-month,
 .react-datepicker__month-dropdown,
