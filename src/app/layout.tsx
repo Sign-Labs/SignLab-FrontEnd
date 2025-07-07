@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./css/central.css";
 import "./css/container.css";
 import "./css/component.css";
-import ClientLayout from './components/ClientLayout';
+import ClientLayout from './components/Navbar';
 
 export const metadata: Metadata = {
   title: "Sign Laboratory",
@@ -13,8 +13,6 @@ export const metadata: Metadata = {
   },
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -24,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ClientLayout>
+      <ClientLayout>
           {children}
-        </ClientLayout>
+      </ClientLayout>
       </body>
     </html>
   );

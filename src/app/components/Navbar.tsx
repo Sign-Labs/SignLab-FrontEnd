@@ -18,22 +18,15 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-
+  const logoClickHandler = () =>
+  {
+    return router.push("/");
+  }
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       {isAtHome && (
-       <aside style={{
-        backgroundColor:"#2c3e50", 
-        width:"250px", 
-        padding:"20px", 
-        display:"flex", 
-        flexDirection:"column", 
-        gap:"15px"
-    }}>
-        <h1 className="font_heading bold">
-            Sign Lab
-        </h1>
-        
+        <aside className='Nav_bar'>
+        <button style={{backgroundColor:"transparent",border:"none",}} onClick={logoClickHandler}><h1 className="font_heading white">Sign Lab</h1></button>
         <nav style={{display:"flex", flexDirection:"column", gap:"10px"}}>
             <button 
               onClick={() => handleNavigation("/lessons")}
