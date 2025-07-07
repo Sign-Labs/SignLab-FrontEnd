@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./css/central.css";
 import "./css/container.css";
 import "./css/component.css";
+import ClientLayout from './components/ClientLayout';
 
 export const metadata: Metadata = {
   title: "Sign Laboratory",
@@ -19,10 +20,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="en">
       <body>
-        {children}
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
