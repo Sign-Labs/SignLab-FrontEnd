@@ -220,10 +220,20 @@ input[type="date"].input_button {
 }
 
 .react-datepicker__day:hover {
-  background-color: var(--lightgreen);
+  background-color: var(--skyblue);
   color: var(--foreground);
 }
-
+.input_button option,
+select.input_button option {
+  background: var(--white);      /* สีพื้นหลัง */
+  color: var(--foreground);      /* สีข้อความ */
+  padding: 12px 16px;           /* ระยะห่างภายใน */
+  font-size: var(--font-menu-size); /* ขนาดฟอนต์ */
+  border-radius: 8px;           /* ลดจาก 20px เป็น 8px */
+  width: 1000px;
+  border: none;                 /* แก้ไขจาก border-color เป็น border: none */
+  transition: all 0.2s ease;    /* เอฟเฟ็กต์การเปลี่ยน */
+}
 
 .react-datepicker__current-month,
 .react-datepicker__month-dropdown,
