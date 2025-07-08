@@ -2,6 +2,7 @@
 import { AiOutlineLeft } from "react-icons/ai";
 import { useRouter } from "next/navigation"; 
 import { useState } from "react";
+import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
 import "../css/component.css"; 
 import "../css/container.css";
 
@@ -12,11 +13,15 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const Login = () =>
     {
-        if (email === "admin" && password === "admin") {
-            rounter.push(`/lessons`);
-        }
-        else {
-            alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        if (email === "third" && password === "00107") {
+            showLoadingPopup("กำลังเข้าสู่ระบบ", "กรุณารอสักครู่...");
+            
+            setTimeout(() => {
+                removeExistingPopup();
+                rounter.push(`/lessons`);
+            }, 2000);
+        } else {
+            showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอกอีเมลหรือรหัสผ่านให้ถูกต้อง");
         }
     }
     return (
@@ -39,7 +44,7 @@ export default function Login() {
                                 <button type= "submit" className="first_button_getstart" onClick={() => Login()}>
                                     <h1 className="font_description_white normal">เข้าสู่ระบบ</h1>
                                 </button>
-                                <h1 className="font_description "><a href="/forgot" className="otp_resend_link">ลืมรหัสผ่าน?</a></h1>
+                                <h1 className="font_description "><a href="/forgot-password" className="otp_resend_link">ลืมรหัสผ่าน?</a></h1>
                             </div>
                         </form>
                     </div>

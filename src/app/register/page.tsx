@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
 import "../css/component.css";
 import "../css/container.css";
 
@@ -23,15 +24,89 @@ export default function Register() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [dob, setDob] = useState<Date | null>(null);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // เพิ่ม logic ส่ง OTP ที่นี่
-        alert("ส่งรหัส OTP ไปที่อีเมลแล้ว");
-        router.push("/otp");
+        
+        if (!form.username.trim()) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณากรอกชื่อผู้ใช้");
+            return;
+        }
+        
+        if (!form.firstname.trim()) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณากรอกชื่อ");
+            return;
+        }
+        
+        if (!form.lastname.trim()) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณากรอกนามสกุล");
+            return;
+        }
+        
+        if (!form.gender) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณาเลือกเพศ");
+            return;
+        }
+        
+        if (!form.dob || !dob) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณาเลือกวันเกิด");
+            return;
+        }
+        
+        if (!form.email.trim()) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณากรอกอีเมล");
+            return;
+        }
+        
+        // ตรวจสอบรูปแบบอีเมล
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(form.email)) {
+            showErrorPopup("รูปแบบอีเมลไม่ถูกต้อง", "กรุณากรอกอีเมลให้ถูกต้อง");
+            return;
+        }
+        
+        if (!form.password) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณากรอกรหัสผ่าน");
+            return;
+        }
+        
+        if (form.password.length < 6) {
+            showErrorPopup("รหัสผ่านไม่ถูกต้อง", "รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร");
+            return;
+        }
+        
+        if (!form.confirmPassword) {
+            showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณายืนยันรหัสผ่าน");
+            return;
+        }
+        
+        if (form.password !== form.confirmPassword) {
+            showErrorPopup("รหัสผ่านไม่ตรงกัน", "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน");
+            return;
+        }
+
+        // ถ้าผ่านการตรวจสอบทั้งหมดแล้ว
+        showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
+        
+        setTimeout(() => {
+            removeExistingPopup();
+            showSuccessPopup("ส่งรหัส OTP สำเร็จ", "กรุณาตรวจสอบอีเมลของคุณ", () => {
+                // ส่งข้อมูลไปหน้า OTP
+                const registrationData = encodeURIComponent(JSON.stringify({
+                    username: form.username,
+                    firstname: form.firstname,
+                    lastname: form.lastname,
+                    gender: form.gender,
+                    dob: form.dob,
+                    email: form.email,
+                    password: form.password
+                }));
+                router.push(`/otp?type=register&data=${registrationData}`);
+            });
+        }, 2000);
     };
 
     return (
@@ -40,7 +115,7 @@ export default function Register() {
                 <button onClick={() => window.history.back()} style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}>
                     <AiOutlineLeft size={45} className="back-button" />
                 </button>
-                <h1 className="font_heading">ยินดีต้อนรับรับสู่ Sign Lab</h1>
+                <h1 className="font_heading">ยินดีต้อนรับสู่ Sign Lab</h1>
             </div>
             <div className="login_container_outer">
                 <div className="login_container_inner">
@@ -91,21 +166,19 @@ export default function Register() {
                                 </select>
                                 <div style={{ flex: 1, minWidth: 0 ,width: "100%" }}>
                                     <ReactDatePicker
-                                    selected={dob}
-                                    onChange={(date) => {
-                                        setDob(date);
-                                        setForm({ ...form, dob: date ? date.toISOString().split("T")[0] : "" });
-                                    }}
-                                    dateFormat="dd / MM / yyyy"
-                                    placeholderText="วัน / เดือน / ปี เกิด"
-                                    className="input_button only_calendar"
-                                  
-                                    maxDate={new Date()}
-                                    showMonthDropdown
-                                    showYearDropdown
-                                    dropdownMode="select"
-                                   
-                                />
+                                        selected={dob}
+                                        onChange={(date) => {
+                                            setDob(date);
+                                            setForm({ ...form, dob: date ? date.toISOString().split("T")[0] : "" });
+                                        }}
+                                        dateFormat="dd / MM / yyyy"
+                                        placeholderText="วัน / เดือน / ปี เกิด"
+                                        className="input_button only_calendar"
+                                        maxDate={new Date()}
+                                        showMonthDropdown
+                                        showYearDropdown
+                                        dropdownMode="select"
+                                    />
                                 </div>
                             </div>
                             <input
@@ -126,7 +199,6 @@ export default function Register() {
                                     value={form.password}
                                     onChange={handleChange}
                                     style={{ width: "100%" }}
-
                                 />
                             </div>
                             <div style={{ position: "relative" }}>
@@ -138,13 +210,12 @@ export default function Register() {
                                     value={form.confirmPassword}
                                     onChange={handleChange}
                                     style={{ width: "100%" }}
-
                                 />
                             </div>
                             <div style={{ display: "flex", justifyContent: "center"}}>
-                            <button type="submit" className="first_button_getstart" style={{ marginTop: 12}}>
-                                <h1 className="font_description_white normal">รับรหัส OTP</h1>
-                            </button>
+                                <button type="submit" className="first_button_getstart" style={{ marginTop: 12}}>
+                                    <h1 className="font_description_white normal">รับรหัส OTP</h1>
+                                </button>
                             </div>
                         </form>
                     </div>
