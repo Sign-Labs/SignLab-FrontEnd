@@ -135,10 +135,33 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* เงาอ่อนๆ */
     padding: 40px;
     width: 100%;
-    max-width: 450px; /* ความกว้างสูงสุด */
+    max-width: 100vh; /* ความกว้างสูงสุด */
     text-align: center;
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
+.container_left
+{
+  display:flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: left;
+  text-align: left;
+  /* margin-left: 10px; */
+  padding: 15px;
+}
+.Nav_bar
+{
+  display:flex;
+  flex-direction: column;
+  background-color: var(--skyblue);
+  width: auto;
+  gap:15px;
+  padding: 20px;
+  min-height: 100vh; /* ความสูงขั้นต่ำ 100% ของหน้าจอ */
+  /* border-top-right-radius: 32px; */
+  /* border-bottom-right-radius: 32px; */
+  
+}
