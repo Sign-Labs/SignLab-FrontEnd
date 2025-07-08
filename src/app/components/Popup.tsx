@@ -221,7 +221,6 @@ export const showConfirmPopup = (title: string, message: string, onConfirm: () =
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
     
-    // เพิ่ม event listeners
     const okButton = document.getElementById('confirm-popup-ok');
     const cancelButton = document.getElementById('confirm-popup-cancel');
     
@@ -240,7 +239,6 @@ export const showConfirmPopup = (title: string, message: string, onConfirm: () =
     }
 };
 
-// ฟังก์ชันสำหรับลบ popup ที่มีอยู่
 export const removeExistingPopup = () => {
     const existingPopup = document.getElementById('popup-overlay');
     if (existingPopup) {
@@ -248,7 +246,6 @@ export const removeExistingPopup = () => {
     }
 };
 
-// ฟังก์ชันสำหรับแสดง Custom Popup
 export const showCustomPopup = (content: string, duration?: number, callback?: () => void) => {
     removeExistingPopup();
     
@@ -283,7 +280,6 @@ export const showCustomPopup = (content: string, duration?: number, callback?: (
     overlay.appendChild(popup);
     document.body.appendChild(overlay);
     
-    // Auto remove หลังจากระยะเวลาที่กำหนด
     if (duration) {
         setTimeout(() => {
             removeExistingPopup();
