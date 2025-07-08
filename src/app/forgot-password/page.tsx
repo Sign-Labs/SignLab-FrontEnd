@@ -2,6 +2,8 @@
 import { AiOutlineLeft } from "react-icons/ai";
 import { useRouter } from "next/navigation"; 
 import { useState } from "react";
+import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
+
 import "../css/component.css"; 
 import "../css/container.css";
 
@@ -13,16 +15,23 @@ export default function Forgot() {
     const [otp, setOtp] = useState("");
     const handleChangePassword = () => {
         if (password === confirmPassword && password !== "" && confirmPassword !== "" && email !== "") {
-            alert("รหัสผ่านถูกเปลี่ยนเรียบร้อยแล้ว");
+           
             router.push("/otp");
         } else {
-            alert("รหัสผ่านไม่ถูกต้อง");
+            if (email === "")
+            {
+                showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอกอีเมล");
+            }
+            else if (password === "")
+            {
+                showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอกรหัสผ่าน");
+            }
+            else
+            {
+                showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน");
+            }
         }
     };
-    const otpchecker = () =>
-    {
-        
-    }
     return (
         <main className="container_outer">
             <div className="login_container_top">
@@ -33,14 +42,9 @@ export default function Forgot() {
             </div>
             <div className="forgot_container_form">
             <form onSubmit={(e) => { e.preventDefault() }}>
+                <input type="email" placeholder="อีเมล" className="input_button" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <input type="password" placeholder="รหัสผ่าน" className="input_button" value={password} onChange={(e) => setPassword(e.target.value)} /> 
                 <input type="password" placeholder="ยืนยันรหัสผ่าน" className="input_button" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} /> 
-                    <input type="email" placeholder="อีเมล" className="input_button" value={email} onChange={(e) => setEmail(e.target.value)} />
-                    <div style={{display: "flex", flexDirection: "row", gap: "10px"}}>
-                <input type="" placeholder="OTP" className="input_button" value={password} onChange={(e) => setPassword(e.target.value)} /> 
-                <button type="submit" className="first_button_getstart" onClick={() => otpchecker()}>ขอOTP</button>
-                    </div>
-                    
                 </form>
                 <button type= "submit" className="first_button_getstart" onClick={() => handleChangePassword()}>
                         <h1 className="font_description_white normal">ขอรหัส OTP</h1>
