@@ -1,8 +1,9 @@
-'use client'
+"use client"
 
 import { ReactNode } from 'react';
 import { useNavigation } from '../hooks/useNavigation';
 import { useRouter } from 'next/navigation';
+import Navbar from './Navcomponent';
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -28,74 +29,35 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
         <aside className='Nav_bar'>
         <button style={{backgroundColor:"transparent",border:"none",}} onClick={logoClickHandler}><h1 className="font_heading white">Sign Lab</h1></button>
         <nav style={{display:"flex", flexDirection:"column", gap:"10px"}}>
-            <button 
-              onClick={() => handleNavigation("/lessons")}
-              style={{
-                color:"white", 
-                textDecoration:"none", 
-                padding:"12px 15px", 
-                borderRadius:"8px", 
-                backgroundColor:"#3498db",
-                display:"flex",
-                alignItems:"center",
-                gap:"10px",
-                border:"none",
-                cursor:"pointer",
-                textAlign:"left"
-            }}>
-                🏠 บทเรียน
-            </button>
-            <button 
-              onClick={() => handleNavigation("/vocabulary")}
-              style={{
-                color:"white", 
-                textDecoration:"none", 
-                padding:"12px 15px", 
-                borderRadius:"8px", 
-                backgroundColor:"rgba(255,255,255,0.1)",
-                display:"flex",
-                alignItems:"center",
-                gap:"10px",
-                border:"none",
-                cursor:"pointer",
-                textAlign:"left"
-            }}>
-                💬 คำศัพท์
-            </button>
-            <button 
-              onClick={() => handleNavigation("/leaderboard")}
-              style={{
-                color:"white", 
-                textDecoration:"none", 
-                padding:"12px 15px", 
-                borderRadius:"8px", 
-                backgroundColor:"rgba(255,255,255,0.1)",
-                display:"flex",
-                alignItems:"center",
-                gap:"10px",
-                border:"none",
-                cursor:"pointer",
-                textAlign:"left"
-            }}>
-                � ตารางคะแนน
-            </button>
-            <button 
-              onClick={() => handleNavigation("/profile")}
-              style={{
-                color:"white", 
-                textDecoration:"none", 
-                padding:"12px 15px", 
-                borderRadius:"8px", 
-                backgroundColor:"rgba(255,255,255,0.1)",
-                display:"flex",
-                alignItems:"center",
-                gap:"10px",
-                border:"none",
-                cursor:"pointer",
-                textAlign:"left"
-            }}>
-                👤 โปรไฟล์
-            </button>
+            <Navbar 
+            path="/lessons" 
+            currentPath={pathname} 
+            onClick={() => handleNavigation("/lessons")}
+            icon="🏠"
+            label="บทเรียน"
+          />
+          <Navbar 
+            path="/vocabulary" 
+            currentPath={pathname} 
+            onClick={() => handleNavigation("/vocabulary")}
+            icon="💬"
+            label="คลังคำศัพท์"
+            />
+             <Navbar 
+            path="/ranking" 
+            currentPath={pathname} 
+            onClick={() => handleNavigation("/ranking")}
+            icon="👤"
+            label="ตารางคะแนน"
+            />
+            <Navbar 
+            path="/profile" 
+            currentPath={pathname} 
+            onClick={() => handleNavigation("/profile")}
+            icon="👤"
+            label="โปรไฟล์ของฉัน"
+            />
+            <button className='Lesson_Button' style={{backgroundColor:"var(--red)"}} onClick={() => handleNavigation("/")}>ลงชื่อออก</button>
         </nav>
     </aside>)}
       <main style={{ flex: 1 }}>
