@@ -246,3 +246,18 @@ select.input_button option {
 .react-datepicker__triangle {
   display: none;
 }
+.Lesson_Button
+{
+  color: white;
+  text-decoration: none;
+  padding : 12px 25px;
+  border-radius: 8px;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
