@@ -6,7 +6,7 @@ export const useNavigation = () => {
   const pathname = usePathname();
 
     const isAtHome = () => {
-        if (pathname === '/lessons' || pathname === '/profile' || pathname === '/leaderboard' || pathname === '/vocabulary') {
+        if (pathname === '/lessons' || pathname === '/profile' || pathname === '/leaderboard' || pathname === '/vocabulary' || pathname === '/ranking' ) {
             return true;
         }
         else
