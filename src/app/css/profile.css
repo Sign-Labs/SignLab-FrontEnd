@@ -1,0 +1,82 @@
+.profileContainer {
+  min-height: auto;
+  width: auto;
+  background: #FFF8E7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.profileAvatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.profileAvatarCircle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #7EC6E3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileForm {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.profileInput,
+.profileInputGroup input {
+  border-radius: 20px;
+  border: 3px solid #ccc;
+  padding: 18px 28px;
+  font-size: 22px;
+  font-weight: 700;
+  background: #f8f8f8;
+  outline: none;
+  color: #333333;
+  width: 100%;
+  transition: border 0.2s;
+}
+
+.profileInput:disabled,
+.profileInputGroup input:disabled {
+  background: #f8f8f8;
+}
+
+.profileInput.editable,
+.profileInputGroup input.editable {
+  background: #fff;
+}
+
+.profileInputLarge {
+  font-size: 26px;
+}
+
+.profileInputGroup {
+  display: flex;
+  gap: 18px;
+}
+
+.profileButton {
+  margin-top: 20px;
+  border-radius: 20px;
+  background: #7EC6E3;
+  color: #333333;
+  border: none;
+  padding: 18px 0;
+  font-size: 26px;
+  font-weight: 700;
+  box-shadow: 0 2px 0 #b2d9e6;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s;
+}
