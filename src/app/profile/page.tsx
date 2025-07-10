@@ -1,6 +1,8 @@
 "use client"
 import { useState } from "react";
 import "./../css/profile.css"; 
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Profile() {
     const [editMode, setEditMode] = useState(false);
@@ -9,12 +11,12 @@ export default function Profile() {
         firstname: "ชยธร",
         lastname: "รุ่งเรือง",
         gender: "ชาย",
-        dob: "01 / 07 / 2003",
+        dob: "2003-07-01",
         email: "chayathonzaza@gmail.com",
         password: "password"
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
     };
 
@@ -38,7 +40,7 @@ export default function Profile() {
                     value={profile.username}
                     onChange={handleChange}
                     disabled={!editMode}
-                    className="profileInput profileInputLarge editMode ? editable : ''}` "
+                    className={`profileInput profileInputLarge${editMode ? " editable" : ""}`}
                 />
                 <div className="profileInputGroup">
                     <input
@@ -47,7 +49,7 @@ export default function Profile() {
                         value={profile.firstname}
                         onChange={handleChange}
                         disabled={!editMode}
-                        className="profileInput editMode ? editable : ''"
+                        className={`profileInput${editMode ? " editable" : ""}`}
                     />
                     <input
                         type="text"
@@ -55,26 +57,65 @@ export default function Profile() {
                         value={profile.lastname}
                         onChange={handleChange}
                         disabled={!editMode}
-                        className="profileInput} {editMode ? editable : ''}"
+                        className={`profileInput${editMode ? " editable" : ""}`}
                     />
                 </div>
                 <div className="profileInputGroup">
-                    <input
-                        type="text"
-                        name="gender"
-                        value={profile.gender}
-                        onChange={handleChange}
-                        disabled={!editMode}
-                        className="profileInput editMode ? editable : ''}"
-                    />
-                    <input
-                        type="text"
-                        name="dob"
-                        value={profile.dob}
-                        onChange={handleChange}
-                        disabled={!editMode}
-                        className="profileInput editMode ? editable : ''}"
-                    />
+                    {editMode ? (
+                        <>
+                            <select
+                                name="gender"
+                                value={profile.gender}
+                                onChange={handleChange}
+                                className="profileInput editable"
+                                style={{ color: profile.gender ? "#333333" : "#888", fontFamily: 'Kanit' }}
+                            >
+                                <option value="ชาย">ชาย</option>
+                                <option value="หญิง">หญิง</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                            <ReactDatePicker
+                                selected={profile.dob ? new Date(profile.dob) : null}
+                                onChange={date =>
+                                    setProfile({ ...profile, dob: date ? date.toISOString().slice(0, 10) : "" })
+                                }
+                                dateFormat="dd/MM/yyyy"
+                                className="profileInput editable"
+                                wrapperClassName="profileInputDateWrapper"
+                                placeholderText="เลือกวันเกิด"
+                                showMonthDropdown
+                                showYearDropdown
+                                dropdownMode="select"
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <input
+                                type="text"
+                                name="gender"
+                                value={profile.gender}
+                                disabled
+                                className="profileInput"
+                                style={{ color: "#333333" }}
+                            />
+                            <input
+                                type="text"
+                                name="dob"
+                                value={
+                                    profile.dob
+                                        ? new Date(profile.dob).toLocaleDateString("en-GB", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric"
+                                        })
+                                        : ""
+                                }
+                                disabled
+                                className="profileInput"
+                                style={{ color: "#333333" }}
+                            />
+                        </>
+                    )}
                 </div>
                 <input
                     type="email"
@@ -82,7 +123,7 @@ export default function Profile() {
                     value={profile.email}
                     onChange={handleChange}
                     disabled={!editMode}
-                    className="profileInput editMode ? editable : ''}"
+                    className={`profileInput${editMode ? " editable" : ""}`}
                 />
                 <input
                     type="password"
@@ -90,7 +131,8 @@ export default function Profile() {
                     value={profile.password}
                     onChange={handleChange}
                     disabled={!editMode}
-                    className= "profileInput editMode ? editable : ''}" />
+                    className={`profileInput${editMode ? " editable" : ""}`}
+                />
                 <button
                     type="button"
                     onClick={editMode ? handleSave : handleEdit}
