@@ -10,6 +10,10 @@
 {
   font-weight: var(--medium-font);
 }
+.regular
+{
+  font-weight: var(--regular-font);
+}
 .bold
 {
   font-weight: var(--bold-font);
@@ -28,7 +32,7 @@
 }
 .background
 {
-  background-color: var(--background);
+  color: var(--background);
 }
 .foreground
 {
@@ -37,6 +41,7 @@
 .font_heading
 {
   font-size: var(--font-heading);
+  font-family: 'kanit';
 }
 .font_heading_Skyblue
 {
@@ -260,4 +265,17 @@ select.input_button option {
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
+}
+.lesson_bar
+{
+  background-color: var(--skyblue);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  display:flex;
+ align-items: center;
+  justify-content: center;
+  gap:10px;
+
+ 
 }

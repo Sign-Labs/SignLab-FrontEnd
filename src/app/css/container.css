@@ -159,8 +159,11 @@
   background-color: var(--skyblue);
   width: auto;
   gap:15px;
-  padding: 20px;
-  min-height: 100vh; /* ความสูงขั้นต่ำ 100% ของหน้าจอ */
+  padding : 5px;
+  padding-left: 20px;
+  padding-right:20px;
+  min-height: 100vh; 
+  box-shadow: 1;/* ความสูงขั้นต่ำ 100% ของหน้าจอ */
   /* border-top-right-radius: 32px; */
   /* border-bottom-right-radius: 32px; */
   
