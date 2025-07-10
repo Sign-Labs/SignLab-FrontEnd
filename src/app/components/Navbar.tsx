@@ -4,6 +4,14 @@ import { ReactNode } from 'react';
 import { useNavigation } from '../hooks/useNavigation';
 import { useRouter } from 'next/navigation';
 import Navbar from './Navcomponent';
+import { CgProfile } from "react-icons/cg";
+import { FaBook } from "react-icons/fa6";
+import { IoPersonSharp } from "react-icons/io5";
+import { FaRankingStar } from "react-icons/fa6";
+import { GiNotebook } from "react-icons/gi";
+
+import '../css/container.css';
+import '../css/component.css';
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -27,37 +35,37 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       {isAtHome && (
         <aside className='Nav_bar'>
-        <button style={{backgroundColor:"transparent",border:"none",}} onClick={logoClickHandler}><h1 className="font_heading white">Sign Lab</h1></button>
-        <nav style={{display:"flex", flexDirection:"column", gap:"10px"}}>
+       <h1 className="font_heading background">Sign Lab</h1>
+          <nav style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <Navbar 
             path="/lessons" 
             currentPath={pathname} 
             onClick={() => handleNavigation("/lessons")}
-            icon="🏠"
+              icon={<GiNotebook size={25}/>}
             label="บทเรียน"
           />
           <Navbar 
             path="/vocabulary" 
             currentPath={pathname} 
             onClick={() => handleNavigation("/vocabulary")}
-            icon="💬"
+              icon={<FaBook size={20} />}
             label="คลังคำศัพท์"
             />
              <Navbar 
             path="/ranking" 
             currentPath={pathname} 
             onClick={() => handleNavigation("/ranking")}
-            icon="👤"
+              icon={<FaRankingStar size={20} />}
             label="ตารางคะแนน"
             />
             <Navbar 
             path="/profile" 
             currentPath={pathname} 
             onClick={() => handleNavigation("/profile")}
-            icon="👤"
+            icon={<IoPersonSharp size={20} />}
             label="โปรไฟล์ของฉัน"
             />
-            <button className='Lesson_Button' style={{backgroundColor:"var(--red)"}} onClick={() => handleNavigation("/")}>ลงชื่อออก</button>
+            <button className='Lesson_Button' style={{backgroundColor:"var(--red)"}} onClick={() => handleNavigation("/")}><h1 className = "font_description_white regular">ลงชื่อออก</h1></button>
         </nav>
     </aside>)}
       <main style={{ flex: 1 }}>
