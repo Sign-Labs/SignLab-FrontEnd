@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
 .light
 {
   font-weight: var(--light-font);
@@ -41,26 +42,35 @@
 .font_heading
 {
   font-size: var(--font-heading);
-  font-family: 'kanit';
+  font-family: 'Kanit';
 }
 .font_heading_Skyblue
 {
   font-size: var(--font-heading);
+  font-family: 'Kanit';
   color: var(--skyblue);
+}
+.font_main
+{
+  font-size: var(--font-menu-size);
+  font-family: 'Kanit';
 }
 .font_description
 {
   font-size: var(--font-description);
+  font-family: 'Kanit';
   color: var(--foreground);
 }
 .font_description_white
 {
   font-size: var(--font-description);
+  font-family: 'Kanit';
   color: var(--background);
 }
 .font_description_Skyblue
 {
   font-size: var(--font-description);
+  font-family: 'Kanit';
   color: var(--skyblue);
 }
 .first_button_register
@@ -271,11 +281,13 @@ select.input_button option {
   background-color: var(--skyblue);
   padding: 20px;
   border-radius: 10px;
+  justify-content: left;
   text-align: center;
   display:flex;
  align-items: center;
-  justify-content: center;
   gap:10px;
-
- 
+}
+.lesson_text
+{
+  text-align:center
 }
