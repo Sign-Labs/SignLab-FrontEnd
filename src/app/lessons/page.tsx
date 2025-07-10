@@ -2,6 +2,7 @@
 import { GiNotebook } from "react-icons/gi";
 import Lesson from "../components/Genlessons";
 import { useRouter } from "next/navigation";
+import { FaList } from "react-icons/fa6";
 export default function lessons() {
     const router = useRouter();
     const navigatehandle =(path: string)=>
@@ -14,8 +15,8 @@ export default function lessons() {
                 <Lesson
                     path="/lessons"
                     onClick={() => navigatehandle("/lessons")}
-                    icon={<GiNotebook size={25} />}
-                    label="บทเรียน"
+                    icon={<FaList size={25} />}
+                    label="บทที่ 1 การทักทายแนะนำตนเอง"
                 />
 {/*               
                 <div style={{

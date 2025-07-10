@@ -1,6 +1,9 @@
 "use client";
 import React from 'react';
+import { useState } from 'react';
 import '../css/component.css'
+import '../css/lessons.css'
+
 interface NavButtonProps {
     path: string;
     onClick: () => void;
@@ -8,12 +11,21 @@ interface NavButtonProps {
     label: string;
   }
   
-  const genlessons = ({ path, onClick, icon, label }: NavButtonProps) => {
+const genlessons = ({ path, onClick, icon, label }: NavButtonProps) => {
+    const [show,setshow] = useState(false);
+    const handleclick = ()=>
+    {
+      setshow(!show);
+      onClick();
+    }
       return (
-        <div>
-            <button onClick={onClick} className ="lesson_bar">
-                {icon} <h1 className ="font_description_white bold">{label}</h1>
-            </button>
+        <div className = "main_container">
+          <button onClick={onClick} className="lesson_bar" onClickCapture={() => handleclick()}>
+                {icon} <h1 className ="font_main bold lesson_text">{label}</h1>
+          </button>
+          {show &&
+          (<h1>test</h1>
+          )}
         </div>
     );
   };

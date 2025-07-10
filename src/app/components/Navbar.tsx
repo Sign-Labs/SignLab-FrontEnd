@@ -36,7 +36,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       {isAtHome && (
         <aside className='Nav_bar'>
        <h1 className="font_heading background">Sign Lab</h1>
-        <nav style={{display:"flex", flexDirection:"column", gap:"10px"}}>
+          <nav style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <Navbar 
             path="/lessons" 
             currentPath={pathname} 
