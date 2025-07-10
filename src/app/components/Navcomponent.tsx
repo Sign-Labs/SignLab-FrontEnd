@@ -5,7 +5,7 @@ interface NavButtonProps {
     path: string;
     currentPath: string;
     onClick: () => void;
-    icon: string;
+    icon: React.ReactNode;
     label: string;
   }
   
@@ -15,7 +15,7 @@ interface NavButtonProps {
     return (
       <button 
             onClick={onClick}
-            className ="Lesson_Button"
+            className = "Lesson_Button"
         style={{
           backgroundColor: isActive ? "var(--boldskyblue)" : "var(--lightblue)",
           textAlign: "left" as const,
@@ -31,7 +31,7 @@ interface NavButtonProps {
           e.currentTarget.style.backgroundColor = isActive ? "var(--boldskyblue)" : "var(--lightblue)";
         }}
       >
-        {icon} {label}
+        {icon} <h1 className ="font_description_white regular">{label}</h1>
       </button>
     );
   };

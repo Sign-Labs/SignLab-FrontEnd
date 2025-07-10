@@ -1,8 +1,23 @@
-export default function Home() {
+"use client"
+import { GiNotebook } from "react-icons/gi";
+import Lesson from "../components/Genlessons";
+import { useRouter } from "next/navigation";
+export default function lessons() {
+    const router = useRouter();
+    const navigatehandle =(path: string)=>
+    {
+        router.push(path);
+    }
     return (
         <main style={{display:"flex", minHeight:"100vh"}}>
-            <div style={{flex:1, padding:"30px", display:"flex", flexDirection:"column", gap:"30px"}}>
-                {/* Header */}
+            <div style={{ flex: 1, padding: "30px", display: "flex", flexDirection: "column", gap: "30px" }}>
+                <Lesson
+                    path="/lessons"
+                    onClick={() => navigatehandle("/lessons")}
+                    icon={<GiNotebook size={25} />}
+                    label="บทเรียน"
+                />
+{/*               
                 <div style={{
                     backgroundColor:"#7fb3d3", 
                     padding:"20px", 
@@ -44,7 +59,7 @@ export default function Home() {
                             ‹
                         </button>
 
-                        {/* Lesson Numbers Grid */}
+                       
                         <div style={{
                             display:"grid",
                             gridTemplateColumns:"repeat(3, 1fr)",
@@ -115,7 +130,7 @@ export default function Home() {
                             }}>5</button>
                         </div>
 
-                        {/* Arrow Right */}
+                       
                         <button style={{
                             position:"absolute",
                             right:"20px",
@@ -131,9 +146,9 @@ export default function Home() {
                         </button>
                     </div>
 
-                    {/* Side Info Cards */}
+                   
                     <div style={{display:"flex", flexDirection:"column", gap:"20px", width:"250px"}}>
-                        {/* Lesson Info Card */}
+                
                         <div style={{
                             backgroundColor:"white",
                             padding:"20px",
@@ -156,7 +171,6 @@ export default function Home() {
                             </p>
                         </div>
 
-                        {/* Leaderboard Card */}
                         <div style={{
                             backgroundColor:"white",
                             padding:"20px",
@@ -186,8 +200,8 @@ export default function Home() {
                                 #36
                             </p>
                         </div>
-                    </div>
-                </div>
+                    </div> */}
+                {/* </div> */}
             </div>
         </main>
     );
