@@ -56,22 +56,13 @@
   height: 100px;
   background: #7ec6e3;
   border-radius: 50%;
-  position: relative;
-
-}
-.ranking-avatar::before {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 18px;
-  top: 18px;
-  width: 24px;
-  height: 24px;
-  background: url("data:image/svg+xml;utf8,<svg width='24' height='24' fill='black' viewBox='0 0 24 24'><circle cx='12' cy='9' r='5'/><ellipse cx='12' cy='19' rx='9' ry='5'/></svg>") no-repeat center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ranking-label {
-  font-size: 1.4rem;
+  font-size: 26px;
   font-weight: bold;
   margin-top: 8px;
   text-align: center;
@@ -98,27 +89,6 @@
   font-size: 1.3rem;
   font-weight: 500;
   background: #fff;
-}
-
-
-
-.ranking-your {
-  background: #7ec6e3;
-  color: #222;
-  border-radius: 16px;
-  margin: 12px 0;
-  border: 3px solid #ffcba4;
-  font-weight: bold;
-}
-
-/* พื้นหลัง leaderboard */
-.podium-bg {
-  background: #faf6e6;
-  min-height: 100vh;
-  width: 100%;
-  padding: 32px 0;
-  color: #222;
-  font-family: 'Kanit', sans-serif;
 }
 
 .ranking-fixed-your {
