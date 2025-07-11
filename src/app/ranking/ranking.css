@@ -1,0 +1,111 @@
+.ranking-bg {
+  background: #faf6e6;
+  min-height: 100vh;
+  padding-top: 32px;
+  font-family: 'Kanit', sans-serif;
+}
+
+.ranking-top3-container {
+  position: relative;
+  width: 100%;      /* กว้างขึ้นให้สมดุลกับตาราง */
+  height: auto;
+  margin: 50px auto 32px auto;
+  margin-bottom: 20%;
+}
+
+.ranking-top3-box {
+  border-radius: 16px;
+  width: 50%;
+  margin: 32px auto 24px auto;
+  padding: 32px 0 16px 0;
+  position: relative;
+  min-height: 140px;
+  margin-bottom: 100px;
+}
+
+.ranking-top1 {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ranking-top2 {
+  position: absolute;
+  left: 25%;
+  top: 70px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ranking-top3 {
+  position: absolute;
+  left: 75%;
+  top: 70px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ranking-avatar {
+  width: 100px;
+  height: 100px;
+  background: #7ec6e3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ranking-label {
+  font-size: 26px;
+  font-weight: bold;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.ranking-table-container {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 48px; /* ช่องว่างด้านล่าง ไม่มีสี ไม่มีกรอบ */
+}
+
+.ranking-table {
+  width: 100%;
+  max-width: 1500px;
+  border-radius: 16px;
+  border: 2px solid #ccc;
+  background: #fff;
+  overflow: hidden;
+}
+
+.ranking-row {
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  font-size: 1.3rem;
+  font-weight: 500;
+  background: #fff;
+}
+
+.ranking-fixed-your {
+  position: fixed;
+  left: 57%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1300px;
+  background: #7ec6e3;
+  color: #222;
+  border-radius: 16px;
+  border: 3px solid #ffcba4;
+  font-weight: bold;
+  font-size: 26px;
+  padding: 18px 32px;
+  text-align: center;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+}
