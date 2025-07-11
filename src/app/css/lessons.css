@@ -21,3 +21,270 @@
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
+.lesson_content {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 800px;
+}
+.lesson-grid-container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    margin: 20px 0;
+}
+
+/* ✅ Grid Section */
+.lesson-grid-wrapper {
+    background: var(--lightgreen);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 3px solid #B8E6B3;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 20px;
+    padding: 10px;
+}
+
+.lesson-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Kanit', sans-serif;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* ✅ สถานะต่างๆ ของ lesson circle */
+.lesson-circle {
+    background: var(--lightgreen);
+    color: var(--foreground);
+}
+
+.lesson-circle.active {
+    background: var(--skyblue);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(110, 193, 228, 0.4);
+}
+
+.lesson-circle.completed {
+    background: var(--boldskyblue);
+    color: white;
+}
+
+.lesson-circle:hover:not(.active) {
+    transform: scale(1.05);
+    background: #9ADB9A;
+}
+
+/* ✅ Navigation Arrows */
+.nav-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.8);
+    color: var(--skyblue);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.nav-arrow:hover:not(:disabled) {
+    background: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.nav-arrow:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ✅ Info Cards */
+.lesson-info-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.info-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.info-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.unit-card {
+    border-color: var(--softorange);
+}
+
+.ranking-card {
+    border-color: var(--skyblue);
+}
+
+.card-title {
+    font-size: var(--font-description);
+    font-weight: var(--bold-font);
+    color: var(--foreground);
+    margin: 0 0 8px 0;
+    font-family: 'Kanit', sans-serif;
+}
+
+.card-subtitle {
+    font-size: 16px;
+    font-weight: var(--regular-font);
+    color: var(--coolgray);
+    margin: 0;
+    font-family: 'Kanit', sans-serif;
+}
+
+.card-rank {
+    font-size: 28px;
+    font-weight: var(--bold-font);
+    color: var(--skyblue);
+    margin: 10px 0 0 0;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+    .lesson-grid-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .lesson-grid-wrapper {
+        padding: 20px;
+    }
+    
+    .lesson-circle {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .lesson-info-cards {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    
+    .info-card {
+        flex: 1;
+        min-width: auto;
+    }
+}
+
+/* ✅ Arrow indicator บน lesson circle active */
+.lesson-circle.active::before {
+    content: '';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid var(--skyblue);
+}
+
+.lesson-circle {
+    position: relative;
+}
+/* เพิ่มใน lessons.css */
+
+.lesson-grid-container.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+}
+
+.spinner {
+    border: 4px solid var(--coolgray);
+    border-top: 4px solid var(--skyblue);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.lesson-grid-container.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.error-message {
+    text-align: center;
+    padding: 40px;
+    background: #ffebee;
+    border-radius: 10px;
+    border: 2px solid #f44336;
+}
+
+.error-message p {
+    color: #f44336;
+    margin-bottom: 20px;
+    font-size: var(--font-description);
+}
+
+.error-message button {
+    background: var(--skyblue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif;
+}
+
+.lesson-circle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.lesson_bar:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
