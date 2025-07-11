@@ -1,20 +1,27 @@
 "use client";
 import "./ranking.css";
+import { FaUser } from "react-icons/fa";
 
 export default function Ranking() {
   return (
     <div className="ranking-bg">
       <div className="ranking-top3-box">
         <div className="ranking-top ranking-top1">
-          <div className="ranking-avatar" />
+          <div className="ranking-avatar">
+            <FaUser size={65} color="#333" />
+          </div>
           <div className="ranking-label">#1 John Doe</div>
         </div>
         <div className="ranking-top ranking-top2">
-          <div className="ranking-avatar" />
+          <div className="ranking-avatar">
+            <FaUser size={65} color="#333" />
+          </div>
           <div className="ranking-label">#2 John Doe</div>
         </div>
         <div className="ranking-top ranking-top3">
-          <div className="ranking-avatar" />
+          <div className="ranking-avatar">
+            <FaUser size={65} color="#333" />
+          </div>
           <div className="ranking-label">#3 John Doe</div>
         </div>
       </div>
