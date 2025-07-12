@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./../css/profile.css"; 
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from '../axios';
 
 export default function Profile() {
     const [editMode, setEditMode] = useState(false);

@@ -12,6 +12,7 @@
     "@heroui/date-picker": "^2.3.22",
     "@heroui/system": "^2.4.18",
     "@heroui/theme": "^2.4.17",
+    "axios": "^1.10.0",
     "framer-motion": "^12.23.0",
     "next": "15.3.3",
     "react": "^19.1.0",
