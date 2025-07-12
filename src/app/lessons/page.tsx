@@ -1,208 +1,124 @@
 "use client"
 import { GiNotebook } from "react-icons/gi";
 import Lesson from "../components/Genlessons";
+import LessonGrid from "../components/Lessongrid";
 import { useRouter } from "next/navigation";
 import { FaList } from "react-icons/fa6";
-export default function lessons() {
+import "../css/lessons.css";
+import { useState } from "react";
+
+export default function Lessons() {
     const router = useRouter();
-    const navigatehandle =(path: string)=>
-    {
-        router.push(path);
+    const [show1, setshow1] = useState(false);
+    const [show2, setshow2] = useState(false);
+    const [show3, setshow3] = useState(false);
+    const [show4, setshow4] = useState(false);
+    const [show5, setshow5] = useState(false);
+
+    const currentStage = 1;      
+    const chapterToShow = 3;     
+    const totalStages = 6;      
+
+    // ฟังก์ชันสำหรับแต่ละด่าน
+    const toggleGrid1 = () => setshow1(!show1);
+    const toggleGrid2 = () => setshow2(!show2);
+    const toggleGrid3 = () => setshow3(!show3);
+    const toggleGrid4 = () => setshow4(!show4);
+    const toggleGrid5 = () => setshow5(!show5);
+    
+    const handleStageClick = (chapterNumber: number, stageId: number) => {
+        console.log(`เริ่มบทที่ ${chapterNumber} ด่านที่ ${stageId}`);
+        router.push(`/lessons/chapter/stage${chapterNumber}/${stageId}`);
     }
+
     return (
         <main style={{display:"flex", minHeight:"100vh"}}>
             <div style={{ flex: 1, padding: "30px", display: "flex", flexDirection: "column", gap: "30px" }}>
-                <Lesson
-                    path="/lessons"
-                    onClick={() => navigatehandle("/lessons")}
-                    icon={<FaList size={25} />}
-                    label="บทที่ 1 การทักทายแนะนำตนเอง"
-                />
-{/*               
-                <div style={{
-                    backgroundColor:"#7fb3d3", 
-                    padding:"20px", 
-                    borderRadius:"10px", 
-                    textAlign:"center"
-                }}>
-                    <h1 style={{
-                        color:"white", 
-                        fontSize:"24px", 
-                        fontWeight:"bold", 
-                        margin:0
-                    }}>
-                        บทที่ 1 การทักทายและนำตนเอง
-                    </h1>
-                </div>
-
-                <div style={{display:"flex", gap:"30px", alignItems:"flex-start"}}>
-                    <div style={{
-                        backgroundColor:"#a8d5a8", 
-                        padding:"40px", 
-                        borderRadius:"15px", 
-                        flex:1,
-                        display:"flex",
-                        flexDirection:"column",
-                        alignItems:"center",
-                        position:"relative"
-                    }}>
-                        <button style={{
-                            position:"absolute",
-                            left:"20px",
-                            top:"50%",
-                            transform:"translateY(-50%)",
-                            backgroundColor:"transparent",
-                            border:"none",
-                            fontSize:"24px",
-                            color:"#666",
-                            cursor:"pointer"
-                        }}>
-                            ‹
+                <div className="main_container">
+                    {/* ด่านที่ 1 */}
+                    <div className="main_component" style={{backgroundColor: show1 ? "var(--skyblue)" : "transparent"}}>
+                        <button onClick={toggleGrid1} className="lesson_bar" >
+                            <FaList size={25} />
+                            <h1 className="font_main bold lesson_text">
+                                บทที่ 1: พื้นฐานภาษามือ
+                            </h1>
                         </button>
-
-                       
-                        <div style={{
-                            display:"grid",
-                            gridTemplateColumns:"repeat(3, 1fr)",
-                            gap:"20px",
-                            marginBottom:"20px"
-                        }}>
-                            <button style={{
-                                width:"60px",
-                                height:"60px",
-                                borderRadius:"50%",
-                                backgroundColor:"#5dade2",
-                                border:"none",
-                                color:"white",
-                                fontSize:"24px",
-                                fontWeight:"bold",
-                                cursor:"pointer"
-                            }}>1</button>
-                            <button style={{
-                                width:"60px",
-                                height:"60px",
-                                borderRadius:"50%",
-                                backgroundColor:"#58d68d",
-                                border:"none",
-                                color:"white",
-                                fontSize:"24px",
-                                fontWeight:"bold",
-                                cursor:"pointer"
-                            }}>2</button>
-                            <button style={{
-                                width:"60px",
-                                height:"60px",
-                                borderRadius:"50%",
-                                backgroundColor:"#58d68d",
-                                border:"none",
-                                color:"white",
-                                fontSize:"24px",
-                                fontWeight:"bold",
-                                cursor:"pointer"
-                            }}>3</button>
-                        </div>
-
-                        <div style={{
-                            display:"grid",
-                            gridTemplateColumns:"repeat(2, 1fr)",
-                            gap:"20px"
-                        }}>
-                            <button style={{
-                                width:"60px",
-                                height:"60px",
-                                borderRadius:"50%",
-                                backgroundColor:"#58d68d",
-                                border:"none",
-                                color:"white",
-                                fontSize:"24px",
-                                fontWeight:"bold",
-                                cursor:"pointer"
-                            }}>4</button>
-                            <button style={{
-                                width:"60px",
-                                height:"60px",
-                                borderRadius:"50%",
-                                backgroundColor:"#58d68d",
-                                border:"none",
-                                color:"white",
-                                fontSize:"24px",
-                                fontWeight:"bold",
-                                cursor:"pointer"
-                            }}>5</button>
-                        </div>
-
-                       
-                        <button style={{
-                            position:"absolute",
-                            right:"20px",
-                            top:"50%",
-                            transform:"translateY(-50%)",
-                            backgroundColor:"transparent",
-                            border:"none",
-                            fontSize:"24px",
-                            color:"#666",
-                            cursor:"pointer"
-                        }}>
-                            ›
-                        </button>
+                        {show1 && (
+                            <LessonGrid 
+                                chapterNumber={1}
+                                onStageClick={(stageId) => handleStageClick(1, stageId)}/>
+                        )}
                     </div>
 
-                   
-                    <div style={{display:"flex", flexDirection:"column", gap:"20px", width:"250px"}}>
-                
-                        <div style={{
-                            backgroundColor:"white",
-                            padding:"20px",
-                            borderRadius:"15px",
-                            boxShadow:"0 2px 10px rgba(0,0,0,0.1)"
-                        }}>
-                            <h3 style={{
-                                fontSize:"18px",
-                                fontWeight:"bold",
-                                margin:"0 0 10px 0"
-                            }}>
-                                บทเรียนที่ 1
-                            </h3>
-                            <p style={{
-                                color:"#666",
-                                margin:0,
-                                fontSize:"14px"
-                            }}>
-                                หน่วยที่ 1 / 5
-                            </p>
-                        </div>
+                    {/* ด่านที่ 2 */}
+                    <div className="main_component" style={{backgroundColor: show2 ? "var(--skyblue)" : "transparent"}}>
+                        <button onClick={toggleGrid2} className="lesson_bar">
+                            <FaList size={25} />
+                            <h1 className="font_main bold lesson_text">
+                                บทที่ 2: คำทักทาย
+                            </h1>
+                        </button>
+                        {show2 && (
+                            <LessonGrid 
+                                chapterNumber={2}
+                                onStageClick={(stageId) => handleStageClick(2, stageId)}/>
+                        )}
+                    </div>
 
-                        <div style={{
-                            backgroundColor:"white",
-                            padding:"20px",
-                            borderRadius:"15px",
-                            boxShadow:"0 2px 10px rgba(0,0,0,0.1)"
-                        }}>
-                            <h3 style={{
-                                fontSize:"18px",
-                                fontWeight:"bold",
-                                margin:"0 0 10px 0"
-                            }}>
-                                ตารางคะแนน
-                            </h3>
-                            <p style={{
-                                color:"#666",
-                                margin:0,
-                                fontSize:"14px"
-                            }}>
-                                คุณอยู่อันดับ
-                            </p>
-                            <p style={{
-                                fontSize:"24px",
-                                fontWeight:"bold",
-                                color:"#f39c12",
-                                margin:"5px 0 0 0"
-                            }}>
-                                #36
-                            </p>
-                        </div>
-                    </div> */}
-                {/* </div> */}
+                    {/* ด่านที่ 3 */}
+                    <div className="main_component" style={{backgroundColor: show3 ? "var(--skyblue)" : "transparent"}}>
+                        <button onClick={toggleGrid3} className="lesson_bar">
+                            <FaList size={25} />
+                            <h1 className="font_main bold lesson_text">
+                                บทที่ 3: ตัวเลขและการนับ
+                            </h1>
+                        </button>
+                        {show3 && (
+                            <LessonGrid 
+                                chapterNumber={3}
+                                onStageClick={(stageId) => handleStageClick(3, stageId)}/>
+                        )}
+                    </div>
+
+                    {/* ด่านที่ 4 */}
+                    <div className="main_component" style={{backgroundColor: show4 ? "var(--skyblue)" : "transparent"}}>
+                        <button onClick={toggleGrid4} className="lesson_bar">
+                            <FaList size={25} />
+                            <h1 className="font_main bold lesson_text">
+                                บทที่ 4: ครอบครัวและความสัมพันธ์
+                            </h1>
+                        </button>
+                        {show4 && (
+                            <LessonGrid 
+                                chapterNumber={4}
+                                onStageClick={(stageId) => handleStageClick(4, stageId)}/>
+                        )}
+                    </div>
+
+                    {/* ด่านที่ 5 */}
+                    <div className="main_component" style={{backgroundColor: show5 ? "var(--skyblue)" : "transparent"}}>
+                        <button onClick={toggleGrid5} className="lesson_bar">
+                            <FaList size={25} />
+                            <h1 className="font_main bold lesson_text">
+                                บทที่ 5: กิจกรรมประจำวัน
+                            </h1>
+                        </button>
+                        {show5 && (
+                            <LessonGrid 
+                                chapterNumber={5}
+                                onStageClick={(stageId) => handleStageClick(5, stageId)}/>
+                        )}
+                    </div>
+
+                    {/* Coming Soon */}
+                    <div className="main_component">
+                        <button className="lesson_bar coming-soon">
+                            <h1 className="font_main bold lesson_text">
+                                Coming soon.....
+                            </h1>
+                        </button>
+                    </div>
+                </div>
             </div>
         </main>
     );

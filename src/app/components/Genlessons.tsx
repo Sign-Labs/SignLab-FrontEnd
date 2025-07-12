@@ -23,9 +23,6 @@ const genlessons = ({ path, onClick, icon, label }: NavButtonProps) => {
           <button onClick={onClick} className="lesson_bar" onClickCapture={() => handleclick()}>
                 {icon} <h1 className ="font_main bold lesson_text">{label}</h1>
           </button>
-          {show &&
-          (<h1>test</h1>
-          )}
         </div>
     );
   };
