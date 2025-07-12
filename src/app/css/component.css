@@ -276,6 +276,21 @@ select.input_button option {
   transition: all 0.3s ease;
   width: 100%;
 }
+.Lesson_Button_name
+{
+    color: white;
+  text-decoration: none;
+  padding : 12px 25px;
+  border-radius: 8px;
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 10px;
+  border: none;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-bottom: 20px;
+}
 .lesson_bar
 {
   background-color: var(--skyblue);
