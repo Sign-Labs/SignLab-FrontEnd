@@ -92,8 +92,8 @@ export default function otp() {
       await axios.post("/register", registrationData);
 
       removeExistingPopup();
-      showSuccessPopup("ลงทะเบียนสำเร็จ", "กรุณาเข้าสู่ระบบ", () => {
-        router.push("/login");
+      showSuccessPopup("ลงทะเบียนสำเร็จ", "กรุณาเปลี่ยนรหัสผ่าน", () => {
+        router.push("/change-password");
       });
 
     } catch (err: any) {

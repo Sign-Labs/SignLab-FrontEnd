@@ -6,6 +6,7 @@ import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, r
 
 import "../css/component.css"; 
 import "../css/container.css";
+import { i } from "framer-motion/client";
 
 export default function Forgot() {
     const router = useRouter();
@@ -14,12 +15,18 @@ export default function Forgot() {
     const [email, setEmail] = useState("");
     const [otp, setOtp] = useState("");
     const handleChangePassword = () => {
-        if (email !== "") {
-            router.push("/otp");
-        } 
-        else
-        {
-            showErrorPopup("กรุณากรอกอีเมล","");
+        if (password === confirmPassword && password !== "" && confirmPassword !== "" ) {
+           
+            router.push("/login");
+        } else {
+            if (password === "")
+            {
+                showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอกรหัสผ่าน");
+            }
+            else if (confirmPassword === "")
+            {
+                showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน");
+            }
         }
     };
     return (
@@ -28,16 +35,15 @@ export default function Forgot() {
                 <button onClick={() => window.history.back()}style={{background: "transparent", border: "none",padding: 0,cursor: "pointer"}}>
                  <AiOutlineLeft size={45} className="back-button" />
                 </button>
-                <h1 className="font_heading">กรุณากรอกอีเมล</h1>
+                <h1 className="font_heading">เปลี่ยนรหัสผ่าน</h1>
             </div>
             <div className="forgot_container_form">
             <form onSubmit={(e) => { e.preventDefault() }}>
-                    <input type="password" placeholder="email" className="input_button" style={{minWidth:"600px"}} value={email} onChange={(e) => setEmail(e.target.value)} />
-                  
-                    
-            </form>
+                <input type="password" placeholder="รหัสผ่าน" className="input_button" value={password} onChange={(e) => setPassword(e.target.value)} /> 
+                <input type="password" placeholder="ยืนยันรหัสผ่าน" className="input_button" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} /> 
+                </form>
                 <button type= "submit" className="first_button_getstart" onClick={() => handleChangePassword()}>
-                        <h1 className="font_description_white normal">ขอรหัส OTP</h1>
+                        <h1 className="font_description_white normal">ตกลง</h1>
                 </button>
             </div>
 
