@@ -26,6 +26,9 @@ export default function otp() {
   }, [searchParams]);
 
 
+ 
+
+
 
     const handleOtpChange = (index:number, value:string) => {
         if (value.length <= 1) {

@@ -20,7 +20,7 @@ export default function Register() {
         email: "",
         password: "",
         confirmPassword: "",
-        tel:"0811234567"
+        tel:""
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -30,7 +30,33 @@ export default function Register() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-   const handleSubmit = async (e) => {
+     const handleCheckUser = async () => {
+  try {
+    const res = await axios.post("/check-user", {
+      username: form.username,
+      email: form.email
+    });
+
+    return res.data.success === true;
+  } catch (err: any) {
+    if (err.response?.status === 409) {
+      const conflict = err.response.data.conflicts;
+      if (conflict.username) showErrorPopup("ชื่อผู้ใช้นี้ถูกใช้แล้ว", conflict.username);
+      if (conflict.email) showErrorPopup("อีเมลนี้ถูกใช้แล้ว", conflict.email);
+    } else {
+      showErrorPopup("เกิดข้อผิดพลาด", "ไม่สามารถตรวจสอบชื่อผู้ใช้ได้");
+    }
+    return false;
+  }
+};
+
+
+
+
+
+
+
+   const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
         
         if (!form.username.trim()) {
@@ -89,7 +115,9 @@ export default function Register() {
             showErrorPopup("รหัสผ่านไม่ตรงกัน", "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน");
             return;
         }
-
+         
+         const valid = await handleCheckUser();
+          if (!valid) return;
         // ถ้าผ่านการตรวจสอบทั้งหมดแล้ว
         showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
         
@@ -114,7 +142,7 @@ export default function Register() {
           birthday: form.birthday,
           email: form.email,
           password: form.password,
-          tel: "0000000000" // <--- ใส่เบอร์โทรจริงถ้ามี input field
+          tel: "0000000000" //form.tel <--- ใส่เบอร์โทรจริงถ้ามี input field
         }));
 
         router.push(`/otp?type=register&data=${registrationData}`);
