@@ -1,46 +1,67 @@
 "use client";
 import "./ranking.css";
 import { FaUser } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import axios from "../axios";
+
+interface UserRank {
+  id: number;
+  username: string;
+  point: number;
+  rank: number | string;
+}
 
 export default function Ranking() {
+  const [leaderboard, setLeaderboard] = useState<UserRank[]>([]);
+  const [currentUser, setCurrentUser] = useState<UserRank | null>(null);
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const res = await axios.get("/leaderboard");
+        if (res.data.success) {
+          setLeaderboard(res.data.leaderboard);
+          setCurrentUser(res.data.current_user);
+        }
+      } catch (err) {
+        console.error("Error loading leaderboard:", err);
+      }
+    };
+
+    fetchLeaderboard();
+  }, []);
+
+  const top3 = leaderboard.slice(0, 3);
+  const others = leaderboard.slice(3);
+
   return (
     <div className="ranking-bg">
       <div className="ranking-top3-box">
-        <div className="ranking-top ranking-top1">
-          <div className="ranking-avatar">
-            <FaUser size={65} color="#333" />
+        {top3.map((user, index) => (
+          <div key={user.id} className={`ranking-top ranking-top${index + 1}`}>
+            <div className="ranking-avatar">
+              <FaUser size={65} color="#333" />
+            </div>
+            <div className="ranking-label">#{user.rank} {user.username}</div>
           </div>
-          <div className="ranking-label">#1 John Doe</div>
-        </div>
-        <div className="ranking-top ranking-top2">
-          <div className="ranking-avatar">
-            <FaUser size={65} color="#333" />
-          </div>
-          <div className="ranking-label">#2 John Doe</div>
-        </div>
-        <div className="ranking-top ranking-top3">
-          <div className="ranking-avatar">
-            <FaUser size={65} color="#333" />
-          </div>
-          <div className="ranking-label">#3 John Doe</div>
-        </div>
+        ))}
       </div>
+
       <div className="ranking-table-container">
         <div className="ranking-table">
-          <div className="ranking-row">#4 John Doe</div>
-          <div className="ranking-row">#5 John Doe</div>
-          <div className="ranking-row">#6 John Doe</div>
-          <div className="ranking-row">#7 John Doe</div>
-          <div className="ranking-row">#8 John Doe</div>
-          <div className="ranking-row">#9 John Doe</div>
-          <div className="ranking-row">#10 John Doe</div>
-          <div className="ranking-row">#11 John Doe</div>
-          <div className="ranking-row">#12 John Doe</div>
-          <div className="ranking-row">#13 John Doe</div>
-          <div className="ranking-row">#14 John Doe</div>
+          {others.map((user) => (
+            <div key={user.id} className="ranking-row">
+              #{user.rank} {user.username}
+            </div>
+          ))}
         </div>
       </div>
-      <div className="ranking-fixed-your">Your Rank #36 ThirdTZ</div>
+
+      {currentUser && (
+        <div className="ranking-fixed-your">
+          Your Rank #{currentUser.rank} {currentUser.username}
+        </div>
+      )}
     </div>
   );
 }

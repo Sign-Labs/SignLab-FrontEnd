@@ -1,15 +1,34 @@
 "use client";
 import { AiOutlineLeft } from "react-icons/ai";
-import { useRouter } from "next/navigation"; 
-import { useState } from "react";
+import { useRouter,useSearchParams  } from "next/navigation"; 
+import { useState,useEffect } from "react";
 import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
 import "./../css/component.css"; 
 import "./../css/container.css"; 
+import axios from "../axios"; 
 
 export default function otp() {
     const router = useRouter();
-    const [otp, setOtp] = useState(["", "", "", ""]);
-    const [email, setEmail] = useState("Clienttest@gmail.com");
+    const [otp, setOtp] = useState(["", "", "", "","",""]);
+   const searchParams = useSearchParams();  // ดึง query string
+      const [email, setEmail] = useState("");
+     useEffect(() => {
+    const dataParam = searchParams.get('data');
+    if (dataParam) {
+      try {
+        const decoded = decodeURIComponent(dataParam);
+        const parsed = JSON.parse(decoded);
+        setEmail(parsed.email);
+      } catch (err) {
+        console.error("Failed to parse data", err);
+      }
+    }
+  }, [searchParams]);
+
+
+ 
+
+
 
     const handleOtpChange = (index:number, value:string) => {
         if (value.length <= 1) {
@@ -17,44 +36,78 @@ export default function otp() {
             newOtp[index] = value;
             setOtp(newOtp);
             
-            if (value && index < 3) {
+            if (value && index < 5) {
                 const nextInput = document.getElementById(`otp-${index + 1}`);
                 nextInput?.focus();
             }
         }
     };
 
-    const handleResendOtp = () => {
-        showConfirmPopup(
-            "ส่ง OTP ใหม่",
-            "ต้องการส่งรหัส OTP ใหม่หรือไม่?",
-            () => {
-               
-                showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
-                
-                setTimeout(() => {
-                    removeExistingPopup();
-                    showSuccessPopup("ส่งสำเร็จ", "รหัส OTP ได้ถูกส่งไปยังอีเมลของคุณแล้ว");
-                }, 2000);
-            }
-        );
-    };
+    const handleResendOtp = async () => {
+  showConfirmPopup(
+    "ส่ง OTP ใหม่",
+    "ต้องการส่งรหัส OTP ใหม่หรือไม่?",
+    async () => {
+      showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
+      try {
+        const res = await axios.post("/send-otp", {
+          email,
+          purpose: "register", // หรือ "reset" แล้วแต่กรณี
+        });
 
-    const handleSubmit = () => {
-        const otpCode = otp.join("");
-        if (otpCode.length === 4) {
-            showLoadingPopup("กำลังตรวจสอบ", "กรุณารอสักครู่...");
-            
-            setTimeout(() => {
-                removeExistingPopup();
-                showSuccessPopup("ยืนยันสำเร็จ", "เข้าสู่ระบบแล้ว", () => {
-                    router.push("/login");
-                });
-            }, 1500);
-        } else {
-            showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอก OTP ให้ครบ 4 หลัก");
-        }
-    };
+        removeExistingPopup();
+        showSuccessPopup("ส่งสำเร็จ", "รหัส OTP ได้ถูกส่งไปยังอีเมลของคุณแล้ว");
+      } catch (err) {
+        console.error("Resend OTP error", err);
+        removeExistingPopup();
+        showErrorPopup("ส่งไม่สำเร็จ", "ไม่สามารถส่ง OTP ได้ กรุณาลองใหม่");
+      }
+    }
+  );
+};
+
+   const handleSubmit = async () => {
+  const otpCode = otp.join("");
+
+  if (otpCode.length === 6) {
+    showLoadingPopup("กำลังตรวจสอบ", "กรุณารอสักครู่...");
+
+    try {
+      // ตรวจสอบ OTP ก่อน
+      await axios.post("/verify-otp", {
+        email,
+        otp: otpCode,
+      });
+
+      // ✅ ดึงข้อมูลการลงทะเบียนจาก searchParams
+      const dataParam = searchParams.get("data");
+      if (!dataParam) {
+        throw new Error("Registration data not found");
+      }
+
+      const decoded = decodeURIComponent(dataParam);
+      const registrationData = JSON.parse(decoded);
+
+      // ✅ เรียก API register
+      await axios.post("/register", registrationData);
+
+      removeExistingPopup();
+      showSuccessPopup("ลงทะเบียนสำเร็จ", "กรุณาเข้าสู่ระบบ", () => {
+        router.push("/login");
+      });
+
+    } catch (err: any) {
+      console.error("OTP/Registration error", err);
+      removeExistingPopup();
+
+      const msg =
+        err?.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองใหม่";
+      showErrorPopup("ไม่สำเร็จ", msg);
+    }
+  } else {
+    showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอก OTP ให้ครบ 6 หลัก");
+  }
+};
 
     return (
         <main className="container_outer">

@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
 import "../css/component.css";
 import "../css/container.css";
+import axios from "../axios"; 
 
 export default function Register() {
     const router = useRouter();
@@ -14,22 +15,49 @@ export default function Register() {
         username: "",
         firstname: "",
         lastname: "",
-        gender: "",
-        dob: "",
+        sex: "",
+        birthday: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        tel:""
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [dob, setDob] = useState<Date | null>(null);
+    const [birthday, setDob] = useState<Date | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+     const handleCheckUser = async () => {
+  try {
+    const res = await axios.post("/check-user", {
+      username: form.username,
+      email: form.email
+    });
+
+    return res.data.success === true;
+  } catch (err: any) {
+    if (err.response?.status === 409) {
+      const conflict = err.response.data.conflicts;
+      if (conflict.username) showErrorPopup("ชื่อผู้ใช้นี้ถูกใช้แล้ว", conflict.username);
+      if (conflict.email) showErrorPopup("อีเมลนี้ถูกใช้แล้ว", conflict.email);
+    } else {
+      showErrorPopup("เกิดข้อผิดพลาด", "ไม่สามารถตรวจสอบชื่อผู้ใช้ได้");
+    }
+    return false;
+  }
+};
+
+
+
+
+
+
+
+   const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
         
         if (!form.username.trim()) {
             showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณากรอกชื่อผู้ใช้");
@@ -46,12 +74,12 @@ export default function Register() {
             return;
         }
         
-        if (!form.gender) {
+        if (!form.sex) {
             showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณาเลือกเพศ");
             return;
         }
         
-        if (!form.dob || !dob) {
+        if (!form.birthday || !birthday) {
             showErrorPopup("ข้อมูลไม่ครบถ้วน", "กรุณาเลือกวันเกิด");
             return;
         }
@@ -87,27 +115,48 @@ export default function Register() {
             showErrorPopup("รหัสผ่านไม่ตรงกัน", "กรุณากรอกรหัสผ่านและยืนยันรหัสผ่านให้ตรงกัน");
             return;
         }
-
+         
+         const valid = await handleCheckUser();
+          if (!valid) return;
         // ถ้าผ่านการตรวจสอบทั้งหมดแล้ว
         showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
         
-        setTimeout(() => {
-            removeExistingPopup();
-            showSuccessPopup("ส่งรหัส OTP สำเร็จ", "กรุณาตรวจสอบอีเมลของคุณ", () => {
-                // ส่งข้อมูลไปหน้า OTP
-                const registrationData = encodeURIComponent(JSON.stringify({
-                    username: form.username,
-                    firstname: form.firstname,
-                    lastname: form.lastname,
-                    gender: form.gender,
-                    dob: form.dob,
-                    email: form.email,
-                    password: form.password
-                }));
-                router.push(`/otp?type=register&data=${registrationData}`);
-            });
-        }, 2000);
-    };
+         try {
+    
+    const otpRes =  await  axios.post("send-otp", {
+      email: form.email,
+        purpose: "register"
+      
+    });
+
+    if (otpRes.data.success) {
+      removeExistingPopup();
+
+      showSuccessPopup("ส่งรหัส OTP สำเร็จ", "กรุณาตรวจสอบอีเมลของคุณ", () => {
+      
+        const registrationData = encodeURIComponent(JSON.stringify({
+          username: form.username,
+          name: form.firstname,
+          surname: form.lastname,
+          sex: form.sex,
+          birthday: form.birthday,
+          email: form.email,
+          password: form.password,
+          tel: "0000000000" //form.tel <--- ใส่เบอร์โทรจริงถ้ามี input field
+        }));
+
+        router.push(`/otp?type=register&data=${registrationData}`);
+      });
+    } else {
+      removeExistingPopup();
+      showErrorPopup("ส่งรหัส OTP ล้มเหลว", otpRes.data.message || "ไม่สามารถส่งอีเมลได้");
+    }
+  } catch (err) {
+    console.error("OTP error", err);
+    removeExistingPopup();
+    showErrorPopup("เกิดข้อผิดพลาด", "ไม่สามารถส่งรหัส OTP ได้");
+  }
+};
 
     return (
         <main>
@@ -153,23 +202,23 @@ export default function Register() {
                             </div>
                             <div style={{ display: "flex", gap: "20px" }}>
                                 <select
-                                    name="gender"
+                                    name="sex"
                                     className="input_button"
-                                    value={form.gender}
+                                    value={form.sex}
                                     onChange={handleChange}
                                     style={{ flex: 1, minWidth: 0 }}
                                 >
                                     <option value="" disabled hidden>เพศ</option>
-                                    <option value="หญิง">หญิง</option>
-                                    <option value="ชาย">ชาย</option>
-                                    <option value="ไม่ระบุ">ไม่ระบุ</option>
+                                    <option value="female">หญิง</option>
+                                    <option value="male">ชาย</option>
+                                    <option value="other">ไม่ระบุ</option>
                                 </select>
                                 <div style={{ flex: 1, minWidth: 0 ,width: "100%" }}>
                                     <ReactDatePicker
-                                        selected={dob}
+                                        selected={birthday}
                                         onChange={(date) => {
                                             setDob(date);
-                                            setForm({ ...form, dob: date ? date.toISOString().split("T")[0] : "" });
+                                            setForm({ ...form, birthday: date ? date.toISOString().split("T")[0] : "" });
                                         }}
                                         dateFormat="dd / MM / yyyy"
                                         placeholderText="วัน / เดือน / ปี เกิด"
