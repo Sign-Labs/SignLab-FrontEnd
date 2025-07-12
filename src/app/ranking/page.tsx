@@ -2,11 +2,18 @@
 import "./ranking.css";
 import { FaUser } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import axios from "../axios"; 
+import axios from "../axios";
+
+interface UserRank {
+  id: number;
+  username: string;
+  point: number;
+  rank: number | string;
+}
 
 export default function Ranking() {
-  const [leaderboard, setLeaderboard] = useState([]);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [leaderboard, setLeaderboard] = useState<UserRank[]>([]);
+  const [currentUser, setCurrentUser] = useState<UserRank | null>(null);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
