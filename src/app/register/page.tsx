@@ -122,7 +122,7 @@ export default function Register() {
         showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
         
          try {
-    // ส่ง request ไปที่ /send-otp ก่อน (สมมุติ endpoint ส่ง otp)
+    
     const otpRes =  await  axios.post("send-otp", {
       email: form.email,
         purpose: "register"
@@ -133,7 +133,7 @@ export default function Register() {
       removeExistingPopup();
 
       showSuccessPopup("ส่งรหัส OTP สำเร็จ", "กรุณาตรวจสอบอีเมลของคุณ", () => {
-        // เตรียมข้อมูลสำหรับส่งต่อไปหน้า OTP
+      
         const registrationData = encodeURIComponent(JSON.stringify({
           username: form.username,
           name: form.firstname,

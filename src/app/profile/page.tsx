@@ -26,7 +26,7 @@ export default function Profile() {
         if (res.data.success) {
           const user = res.data.user;
 
-          // แปลง date ให้เป็น yyyy-MM-dd สำหรับ input[type=date]
+          
           const birthday = new Date(user.birthday).toISOString().split("T")[0];
 
           setProfile({
@@ -58,7 +58,7 @@ export default function Profile() {
       const res = await axios.put("/user/profile", profile);
       if (res.data.success) {
         setEditMode(false);
-        // Optional: show success popup
+      
       }
     } catch (err) {
       console.error("Error saving profile:", err);
