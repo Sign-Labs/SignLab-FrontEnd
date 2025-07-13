@@ -38,28 +38,28 @@ const LessonGrid = ({
     //  ข้อมูลโครงสร้างบทเรียน (ข้อมูลคงที่)
     const chaptersStructure: Record<number, Omit<ChapterInfo, 'currentStage'>> = {
         1: {
-            title: "พื้นฐานภาษามือ",
-            description: "เรียนรู้ท่าทางพื้นฐานและการสื่อสาร",
+            title: "การทักทายแนะนำ",
+            description: "การทักทายพื้นฐาน",
             totalStages: 5
         },
         2: {
-            title: "คำทักทาย", 
-            description: "ฝึกใช้คำทักทายและการแนะนำตัว",
+            title: "ตัวเลข", 
+            description: "ตัวเลขในภาษาไทย",
             totalStages: 5
         },
         3: {
-            title: "ตัวเลขและการนับ",
-            description: "เรียนรู้การใช้ตัวเลขในภาษามือ",
+            title: "พยัญชนะ",
+            description: "พยัญชนะในภาษาไทย",
             totalStages: 5
         },
         4: {
-            title: "ครอบครัวและความสัมพันธ์",
-            description: "คำศัพท์เกี่ยวกับสมาชิกในครอบครัว",
+            title: "สระ วรรณยุกต์",
+            description: "สระ วรรณยุกต์ในภาษาไทย",
             totalStages: 5
         },
         5: {
-            title: "กิจกรรมประจำวัน",
-            description: "ภาษามือสำหรับกิจกรรมในชีวิตประจำวัน",
+            title: "วันและเวลา",
+            description: "วันและเวลาในภาษาไทย",
             totalStages: 5
         }
     };
