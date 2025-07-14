@@ -107,27 +107,7 @@ export default function Lessons() {
 
     // แสดง Loading ขณะเช็ค authentication
     if (loading) {
-        return (
-            <main style={{
-                display: "flex", 
-                minHeight: "100vh", 
-                alignItems: "center", 
-                justifyContent: "center"
-            }}>
-                <div style={{ textAlign: "center" }}>
-                    <div style={{
-                        border: "4px solid #f3f3f3",
-                        borderTop: "4px solid #3498db",
-                        borderRadius: "50%",
-                        width: "40px",
-                        height: "40px",
-                        animation: "spin 1s linear infinite",
-                        margin: "0 auto 20px"
-                    }}></div>
-                    <p className="font_description">กำลังตรวจสอบสิทธิ์...</p>
-                </div>
-            </main>
-        );
+        showLoadingPopup("กำลังโหลดข้อมูลผู้ใช้...", "กรุณารอสักครู่");
     }
 
     // ถ้าไม่ authenticated ไม่แสดงอะไร (จะ redirect ไป login แล้ว)
@@ -145,7 +125,7 @@ export default function Lessons() {
                         <button onClick={toggleGrid1} className="lesson_bar" >
                             <FaList size={25} />
                             <h1 className="font_main bold lesson_text">
-                                บทที่ 1: พื้นฐานภาษามือ
+                                บทที่ 1: การทักทายแนะนำตนเอง
                             </h1>
                         </button>
                         {show1 && (
@@ -161,7 +141,7 @@ export default function Lessons() {
                         <button onClick={toggleGrid2} className="lesson_bar">
                             <FaList size={25} />
                             <h1 className="font_main bold lesson_text">
-                                บทที่ 2: คำทักทาย
+                                บทที่ 2: ตัวเลข
                             </h1>
                         </button>
                         {show2 && (
@@ -177,7 +157,7 @@ export default function Lessons() {
                         <button onClick={toggleGrid3} className="lesson_bar">
                             <FaList size={25} />
                             <h1 className="font_main bold lesson_text">
-                                บทที่ 3: ตัวเลขและการนับ
+                                บทที่ 3: พยัญชนะ
                             </h1>
                         </button>
                         {show3 && (
@@ -193,7 +173,7 @@ export default function Lessons() {
                         <button onClick={toggleGrid4} className="lesson_bar">
                             <FaList size={25} />
                             <h1 className="font_main bold lesson_text">
-                                บทที่ 4: ครอบครัวและความสัมพันธ์
+                                บทที่ 4: สระ วรรณยุกต์
                             </h1>
                         </button>
                         {show4 && (
@@ -209,7 +189,7 @@ export default function Lessons() {
                         <button onClick={toggleGrid5} className="lesson_bar">
                             <FaList size={25} />
                             <h1 className="font_main bold lesson_text">
-                                บทที่ 5: กิจกรรมประจำวัน
+                                บทที่ 5: วันและเวลา
                             </h1>
                         </button>
                         {show5 && (
