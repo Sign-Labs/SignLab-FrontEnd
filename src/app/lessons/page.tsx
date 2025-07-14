@@ -23,7 +23,7 @@ export default function Lessons() {
     const [userName, setUserName] = useState<string>("");
     const [userProgress, setUserProgress] = useState({
         lastCompletedChapter: 0,
-        lastCompletedStage: 0
+        lastCompletedStage: 5
     });
 
     // เช็ค token และดึงข้อมูลผู้ใช้
