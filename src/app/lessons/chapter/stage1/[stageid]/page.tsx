@@ -279,7 +279,7 @@ export default function Stage() {
                 <div style={{ textAlign: 'center', color: 'var(--foreground)' }}>
                     <h2>รอบที่ {currentRound} จาก 5</h2>
                     <h3>รูปนี้คือสัญลักษณ์อะไร?</h3>
-                    <h4 className=''>สามารถตอบได้อีก {life}</h4>
+                    <h4 className='bold font_style' style={{color:"var(--red)"}} >สามารถตอบได้อีก {life}</h4>
                 </div>
 
                 {/* แสดงตัวเลือกของรอบปัจจุบัน */}
