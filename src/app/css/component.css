@@ -31,13 +31,26 @@
 {
   color: var(--lightgreen);
 }
+.lightgray
+{
+  color: var(--lightgray);
+}
 .background
 {
   color: var(--background);
 }
+.black
+{
+  color: var(--foreground);
+
+}
 .foreground
 {
   color: var(--foreground);
+}
+.font-style
+{
+    font-family: 'Kanit';
 }
 .font_heading
 {

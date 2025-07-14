@@ -183,7 +183,7 @@
 }
 
 .unit-card {
-    border-color: var(--softorange);
+    border-color: var(--skyblue);
 }
 
 .ranking-card {
@@ -221,7 +221,7 @@
 
 .progress-text {
     font-size: 14px;
-    color: #666;
+    color: var(--coolgray);
     margin-bottom: 8px;
     display: block;
 }
@@ -352,7 +352,7 @@
 }
 
 .lesson-grid-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: "var(--background)";
     border-radius: 4px;
 }
 
