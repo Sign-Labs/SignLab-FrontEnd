@@ -8,90 +8,83 @@ import "../css/lessons.css";
 import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
 import { useState, useEffect } from "react";
 import axiosInstance from "../axios";
+import useAuthCheck from "../hooks/useAuthCheck";
+import { jwtDecode } from "jwt-decode";
+
 
 export default function Lessons() {
-    const router = useRouter();
+        
+
+
+
+
     const [show1, setshow1] = useState(false);
     const [show2, setshow2] = useState(false);
     const [show3, setshow3] = useState(false);
     const [show4, setshow4] = useState(false);
     const [show5, setshow5] = useState(false);
+ const router = useRouter();
+  const { loading, isAuthenticated } = useAuthCheck();
 
-    // States สำหรับการจัดการ auth และข้อมูล
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [userName, setUserName] = useState<string>("");
-    const [userProgress, setUserProgress] = useState({
-        lastCompletedChapter: 0,
-        lastCompletedStage: 5
-    });
+  const [userName, setUserName] = useState("ผู้ใช้");
+  const [userProgress, setUserProgress] = useState({
+    lastCompletedChapter: 0,
+    lastCompletedStage: 0,
+  });
 
-    // เช็ค token และดึงข้อมูลผู้ใช้
-    useEffect(() => {
-        const checkAuthAndFetchData = async () => {
-            try {
-                // เช็ค token ใน localStorage
-                const token = localStorage.getItem('token');
-                
-                if (!token) {
-                    // router.push('/login');
-                    return;
-                }
+   useEffect(() => {
+    const token = localStorage.getItem("token");
+ const decoded = jwtDecode(token);
+if (token) {
+  const decoded = jwtDecode(token); // decoded เป็น object ที่มี payload
+  console.log("User ID from token:", decoded.id); // สมมติ payload มี id
+}
 
-                // ทดสอบ token โดยเรียก API
-                const userResponse = await axiosInstance.get("/getdata");
-                if (userResponse.data.success) {
-                    const userData = userResponse.data.user;
-                    setUserName(userData.name || userData.username || "ผู้ใช้");
-                } else {
-                    setUserName("ผู้ใช้");
-                }
-                
-                // เรียก API stage-progress
-                const progressResponse = await axiosInstance.get("/stage-progress/7");
-                const progressData = progressResponse.data;
-                
-                // ใช้ข้อมูลจาก API ตามรูป
-                if (progressData.success && progressData.progress) {
-                    setUserProgress({
-                        lastCompletedChapter: progressData.progress.chapter_number || 0,
-                        lastCompletedStage: progressData.progress.last_stage_id || 0
-                    });
-                } else {
-                    // ถ้าไม่มีข้อมูล progress ใช้ค่าเริ่มต้น
-                    setUserProgress({
-                        lastCompletedChapter: 0,
-                        lastCompletedStage: 0
-                    });
-                }
 
-                // ถ้าทุกอย่าง OK ให้ authenticated = true
-                setIsAuthenticated(true);
+    const fetchUserData = async () => {
+      try {
+        const userRes = await axiosInstance.get("/getdata");
+        if (userRes.data.success) {
+          const user = userRes.data.user;
+          setUserName(user.name || user.username || "ผู้ใช้");
 
-            } catch (error: any) {
-                console.error("Authentication error:", error);
-                
-                // ถ้า error 401 หรือ token หมดอายุ
-                if (error.response?.status === 401) {
-                    localStorage.removeItem('token');
-                    router.push('/login');
-                } else {
-                    // Error อื่นๆ ให้ใช้ค่าเริ่มต้น แต่ยังให้เข้าได้
-                    setUserName("ผู้ใช้");
-                    setUserProgress({
-                        lastCompletedChapter: 0,
-                        lastCompletedStage: 0
-                    });
-                    setIsAuthenticated(true);
-                }
-            } finally {
-                setLoading(false);
-            }
-        };
+         // ดึง progress ของ user คนนี้
+          const progressRes = await axiosInstance.get(`/stage-progress/${decoded.id}`);
+          if (progressRes.data.success && progressRes.data.progress) {
+            setUserProgress({
+              lastCompletedChapter:  progressRes.data.progress.lesson_id +1 ,
+              lastCompletedStage: progressRes.data.progress.last_stage_id ,
+            });
+          }
+          else
+          {
+            setUserProgress({
+            lastCompletedChapter: 1,
+            lastCompletedStage: 0,
+          });
 
-        checkAuthAndFetchData();
-    }, [router]);
-    
+
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        // หาก token หมดอายุหรือล้มเหลว
+        router.push("/login");
+      }
+    };
+
+    if (!loading && isAuthenticated) {
+      fetchUserData();
+    }
+  }, [loading, isAuthenticated]);
+
+  if (loading) {
+    return <div>กำลังโหลดข้อมูลผู้ใช้...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
     // ฟังก์ชันสำหรับแต่ละด่าน
     const toggleGrid1 = () => setshow1(!show1);
@@ -103,6 +96,9 @@ export default function Lessons() {
     const handleStageClick = (chapterNumber: number, stageId: number) => {
         console.log(`เริ่มบทที่ ${chapterNumber} ด่านที่ ${stageId}`);
         router.push(`/lessons/chapter/stage${chapterNumber}/${stageId}`);
+        
+
+
     }
 
     // แสดง Loading ขณะเช็ค authentication

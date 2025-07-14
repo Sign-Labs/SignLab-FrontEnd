@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams,useRouter } from 'next/navigation';
+
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { ImCross } from "react-icons/im";
@@ -9,8 +10,14 @@ import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, r
 import '@/app/css/component.css';
 import '@/app/css/container.css';
 import '@/app/css/stage.css';
+import axios from "@/app/axios";
+import { jwtDecode } from "jwt-decode";
+
+
 
 export default function Stage() {
+    
+    const router = useRouter();
     const [showGate, setShowGate] = useState(true);
     const [progress, setProgress] = useState(0);
     const [progressstage, setProgressstage] = useState(0); 
@@ -20,9 +27,19 @@ export default function Stage() {
     const [currentRound, setCurrentRound] = useState(1); // รอบปัจจุบัน
     const [gameQuestions, setGameQuestions] = useState<any[]>([]); // เก็บคำถาม 5 รอบ
     const [life,setlife] = useState(5); // จำนวนชีวิตเริ่มต้น
+   
+    
+
 
     const params = useParams();
-    const router = useRouter();
+   const stageId = parseInt(params.stageid); // ✅ stageid มาจาก [stageid] ใน path
+    const chapterNumber = 1; // ✅ คุณกำหนดเองจาก folder ชื่อ stage1
+    console.log("Chapter:", chapterNumber); // 1
+    console.log("Stage ID:", stageId);      // 2
+
+
+
+
 
     const questionData = [
         {
@@ -105,6 +122,8 @@ export default function Stage() {
         },
     ];
 
+    
+
     // ฟังก์ชันสร้างตัวเลือก
     const generateChoices = (correctAnswer: string) => {
         const wrongAnswers = questionData
@@ -163,40 +182,73 @@ export default function Stage() {
         }
     };
 
-    // ตรวจคำตอบ
-    const checkAnswer = (selectedAnswer: string) => {
-        if(life == 1)
-        {
-             setTimeout(() => {
-                    window.history.back();
-                     showErrorPopup(`หัวใจคุณหมดแล้ว`);
-                }, 100);
-            // window.history.back();
-        }
-        else
-        {
-             if (selectedAnswer === correctAnswer) {
-            // alert(`ถูกต้อง! รอบที่ ${currentRound}`);
-            showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${correctAnswer}`);
-            
-            if (currentRound < 5) {
-                nextRound(); // ไปรอบถัดไป
-            } else {
-                setProgressstage(prev => prev + 1);
-                setTimeout(() => {
-                    window.history.back();
-                
-                }, 2000);
-                showSuccessPopup(`คุณผ่านด่านแล้ว`);
+ const checkAnswer = async (selectedAnswer: string) => {
 
-            }
+
+
+
+
+    
+
+
+
+    if (life === 1) {
+        setTimeout(() => {
+            showErrorPopup(`หัวใจคุณหมดแล้ว`);
+            window.history.back();
+        }, 100);
+        return;
+    }
+
+    if (selectedAnswer === correctAnswer) {
+        showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${correctAnswer}`);
+
+        if (currentRound < 5) {
+            nextRound(); // ไปรอบถัดไป
         } else {
-            showErrorPopup(`ผิด! ยังไม่ถูกต้อง`);
-            setlife(prev => prev - 1); // ลดจำนวนชีวิต
+            setProgressstage(prev => prev + 1);
             
+
+
+
+           
+
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    console.error("ไม่พบ token");
+                    return;
+                }
+
+                const decoded: any = jwtDecode(token);
+                const userId = decoded.id;
+
+                const res = await axios.post("/update-progress", {
+                    user_id: userId,
+                     stage_id: stageId
+                });
+
+                if (res.data.success) {
+                    console.log("อัปเดต progress สำเร็จ และเพิ่มแต้มแล้ว");
+                } else {
+                  
+                    console.warn("ไม่อัปเดต:", res.data.message);
+                }
+            } catch (error) {
+                console.error("เกิดข้อผิดพลาดในการอัปเดต progress:", error);
+            }
+
+            showSuccessPopup(`คุณผ่านด่านแล้ว`);
+
+            setTimeout(() => {
+                window.history.back();
+            }, 2000);
         }
-        }
-    };
+    } else {
+        showErrorPopup(`ผิด! ยังไม่ถูกต้อง`);
+        setlife(prev => prev - 1); // ลดจำนวนชีวิต
+    }
+};
 
     const calculateProgress = () => {
         return (progressstage / 5) * 100;
