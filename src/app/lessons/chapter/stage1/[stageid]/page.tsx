@@ -257,7 +257,7 @@ export default function Stage() {
             </div>
 
             <div className="progress-container" style={{
-                // backgroundColor:"red", 
+                 backgroundColor:"transparent", 
                 padding: '20px', 
                 display: 'flex',
                 flexDirection: 'column',
