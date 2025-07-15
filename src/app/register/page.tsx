@@ -142,7 +142,7 @@ export default function Register() {
           birthday: form.birthday,
           email: form.email,
           password: form.password,
-          tel: "0000000000" //form.tel <--- ใส่เบอร์โทรจริงถ้ามี input field
+          tel: form.tel //form.tel <--- ใส่เบอร์โทรจริงถ้ามี input field
         }));
 
         router.push(`/otp?type=register&data=${registrationData}`);
