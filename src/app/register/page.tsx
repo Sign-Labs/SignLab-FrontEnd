@@ -230,6 +230,7 @@ export default function Register() {
                                     />
                                 </div>
                             </div>
+                            
                             <input
                                 name="email"
                                 type="email"
@@ -239,6 +240,17 @@ export default function Register() {
                                 onChange={handleChange}
                                 style={{ width: "100%" }}
                             />
+                            <input
+                                name="tel"
+                                type="tel"
+                                placeholder="เบอร์โทร"
+                                className="input_button"
+                                value={form.tel}
+                                onChange={handleChange}
+                                style={{ width: "100%" }}
+                            />
+
+
                             <div style={{ position: "relative" }}>
                                 <input
                                     name="password"
