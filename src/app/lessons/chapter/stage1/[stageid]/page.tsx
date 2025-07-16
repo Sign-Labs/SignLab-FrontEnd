@@ -1,16 +1,21 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams,useRouter } from 'next/navigation';
+
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { ImCross } from "react-icons/im";
-import Image from 'next/image';
+// ลบ import Image
+// import Image from 'next/image';
 import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from '@/app/components/Popup';
 import '@/app/css/component.css';
 import '@/app/css/container.css';
 import '@/app/css/stage.css';
+import axios from "@/app/axios";
+import { jwtDecode } from "jwt-decode";
 
 export default function Stage() {
+    const router = useRouter();
     const [showGate, setShowGate] = useState(true);
     const [progress, setProgress] = useState(0);
     const [progressstage, setProgressstage] = useState(0); 
@@ -22,88 +27,92 @@ export default function Stage() {
     const [life,setlife] = useState(5); // จำนวนชีวิตเริ่มต้น
 
     const params = useParams();
-    const router = useRouter();
+    const stageId = parseInt(params.stageid as string);
+    const chapterNumber = 2; // เปลี่ยนเป็น 2 เพราะเป็น stage2
+    console.log("Chapter:", chapterNumber);
+    console.log("Stage ID:", stageId);
 
-    const questionData = [
-        {
-            id: 1,
-            question:"ฉัน",
-            hint: "ตัวเอง",
-            image: "/chapter/stage1/test.jpg",
-        },
-        {
-            id: 2,
-            question: "ขอโทษ",
-            hint: "คำที่ใช้แสดงความรู้สึกผิด",
-            image: "/chapter/stage1/test2.jpg",
-        },
-        {
-            id: 3,
-            question: "สวัสดี",
-            hint: "คำทักทาย",
-            image: "/chapter/stage1/test3.jpg",
-        },
-        {
-            id: 4,
-            question: "แนะนำ",
-            hint: "แนะนำ",
-            image: "/chapter/stage1/test4.jpg",
-        },
-        {
-            id: 5,
-            question: "พบ(คนหนึ่งและอีกคนหนึ่งพบกัน)",
-            hint: "คนหนึ่งและอีกคนหนึ่งพบกัน",
-            image: "/chapter/stage1/test4.jpg",
-        },
-        {
-            id: 6,
-            question: "พบ(คุณพบกับฉัน)",
-            hint: "คำที่ใช้เมื่อรู่้สึกสบาย",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id: 7,
-            question: "ชื่อภาษามือ",
-            hint: "ชื่อของภาษามือ",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id: 8,
-            question: "ไม่เป็นไร",
-            hint: "คำที่ใช้เมื่อไม่เป็นไร",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id: 9,
-            question: "ไม่สบาย",
-            hint: "ไม่สบาย",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id: 10,
-            question: "ใช่",
-            hint: "ใช่",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id: 11,
-            question: "ไม่ใช่",
-            hint: "ไม่ใช่",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id:12,
-            question: "ขอบคุณ",
-            hint: "ขอบคุณ",
-            image: "/chapter/stage1/test5.jpg",
-        },
-        {
-            id: 13,
-            question: "สบายดี",
-            hint: "สบายดี",
-            image: "/chapter/stage1/test5.jpg",
-        },
-    ];
+    // เปลี่ยน questionData ให้ใช้ video แทน image
+   const questionData = [
+    {
+        id: 1,
+        question: "ฉัน",
+        hint: "ตัวเอง",
+        video: "/chapter/stage1/01.mp4",
+    },
+    {
+        id: 2,
+        question: "ขอโทษ",
+        hint: "คำที่ใช้แสดงความรู้สึกผิด",
+        video: "/chapter/stage1/02.mp4",
+    },
+    {
+        id: 3,
+        question: "ขอบคุณ",
+        hint: "ใช้แสดงความรู้สึกขอบคุณ",
+        video: "/chapter/stage1/03.mp4",
+    },
+    {
+        id: 4,
+        question: "สวัสดี",
+        hint: "คำทักทาย",
+        video: "/chapter/stage1/04.mp4",
+    },
+    {
+        id: 5,
+        question: "แนะนำ",
+        hint: "แนะนำตัวหรือสิ่งของ",
+        video: "/chapter/stage1/05.mp4",
+    },
+    {
+        id: 6,
+        question: "สบายดี",
+        hint: "คำตอบเมื่อมีคนถามว่าสบายดีไหม",
+        video: "/chapter/stage1/06.mp4",
+    },
+    {
+        id: 7,
+        question: "พบ (คนหนึ่งและอีกคนหนึ่งพบกัน)",
+        hint: "คนหนึ่งและอีกคนหนึ่งพบกัน",
+        video: "/chapter/stage1/07.mp4",
+    },
+    {
+        id: 8,
+        question: "พบ (คุณพบกับฉัน)",
+        hint: "คุณพบกับฉัน",
+        video: "/chapter/stage1/08.mp4",
+    },
+    {
+        id: 9,
+        question: "ชื่อภาษามือ",
+        hint: "ชื่อของภาษามือ",
+        video: "/chapter/stage1/09.mp4",
+    },
+    {
+        id: 10,
+        question: "ไม่เป็นไร",
+        hint: "คำที่ใช้เมื่อให้อภัยหรือไม่ถือสา",
+        video: "/chapter/stage1/10.mp4",
+    },
+    {
+        id: 11,
+        question: "ไม่สบาย",
+        hint: "รู้สึกเจ็บป่วย",
+        video: "/chapter/stage1/11.mp4",
+    },
+    {
+        id: 12,
+        question: "ใช่",
+        hint: "คำยืนยัน",
+        video: "/chapter/stage1/12.mp4",
+    },
+    {
+        id: 13,
+        question: "ไม่ใช่",
+        hint: "คำปฏิเสธ",
+        video: "/chapter/stage1/13.mp4",
+    },
+];
 
     // ฟังก์ชันสร้างตัวเลือก
     const generateChoices = (correctAnswer: string) => {
@@ -120,7 +129,7 @@ export default function Stage() {
         return allChoices.sort(() => Math.random() - 0.5);
     };
 
-    // สุ่มคำถาม 5 รอบ
+    // สุ่มคำถาม 5 รอบ - เปลี่ยน image เป็น video
     const generateGameQuestions = () => {
         const shuffledQuestions = [...questionData].sort(() => Math.random() - 0.5);
         const selected5Questions = shuffledQuestions.slice(0, 5);
@@ -129,7 +138,7 @@ export default function Stage() {
             round: index + 1,
             correctAnswer: question.question,
             hint: question.hint,
-            image: question.image,
+            video: question.video, // เปลี่ยนจาก image เป็น video
             choices: generateChoices(question.question)
         }));
         
@@ -142,6 +151,7 @@ export default function Stage() {
         setGameQuestions(newGameQuestions);
         setCurrentRound(1);
         setProgressstage(0);
+        setlife(5); // รีเซ็ตชีวิต
         
         // ตั้งค่ารอบแรก
         if (newGameQuestions.length > 0) {
@@ -155,7 +165,7 @@ export default function Stage() {
     // ไปรอบถัดไป
     const nextRound = () => {
         if (currentRound < 5 && currentRound < gameQuestions.length) {
-            const nextRoundData = gameQuestions[currentRound]; // currentRound เป็น 0-based
+            const nextRoundData = gameQuestions[currentRound];
             setCurrentRound(prev => prev + 1);
             setProgressstage(prev => prev + 1);
             setCorrectAnswer(nextRoundData.correctAnswer);
@@ -163,38 +173,56 @@ export default function Stage() {
         }
     };
 
-    // ตรวจคำตอบ
-    const checkAnswer = (selectedAnswer: string) => {
-        if(life == 1)
-        {
-             setTimeout(() => {
-                    window.history.back();
-                     showErrorPopup(`หัวใจคุณหมดแล้ว`);
-                }, 100);
-            // window.history.back();
+    const checkAnswer = async (selectedAnswer: string) => {
+        if (life === 1) {
+            setTimeout(() => {
+                showErrorPopup(`หัวใจคุณหมดแล้ว`);
+                window.history.back();
+            }, 100);
+            return;
         }
-        else
-        {
-             if (selectedAnswer === correctAnswer) {
-            // alert(`ถูกต้อง! รอบที่ ${currentRound}`);
+
+        if (selectedAnswer === correctAnswer) {
             showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${correctAnswer}`);
-            
+
             if (currentRound < 5) {
                 nextRound(); // ไปรอบถัดไป
             } else {
                 setProgressstage(prev => prev + 1);
-                setTimeout(() => {
-                    window.history.back();
-                
-                }, 2000);
+
+                try {
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                        console.error("ไม่พบ token");
+                        return;
+                    }
+
+                    const decoded: any = jwtDecode(token);
+                    const userId = decoded.id;
+
+                    const res = await axios.post("/update-progress", {
+                        user_id: userId,
+                        stage_id: stageId
+                    });
+
+                    if (res.data.success) {
+                        console.log("อัปเดต progress สำเร็จ และเพิ่มแต้มแล้ว");
+                    } else {
+                        console.warn("ไม่อัปเดต:", res.data.message);
+                    }
+                } catch (error) {
+                    console.error("เกิดข้อผิดพลาดในการอัปเดต progress:", error);
+                }
+
                 showSuccessPopup(`คุณผ่านด่านแล้ว`);
 
+                setTimeout(() => {
+                    window.history.back();
+                }, 2000);
             }
         } else {
             showErrorPopup(`ผิด! ยังไม่ถูกต้อง`);
             setlife(prev => prev - 1); // ลดจำนวนชีวิต
-            
-        }
         }
     };
 
@@ -264,21 +292,42 @@ export default function Stage() {
                 alignItems: 'center',
                 gap: '15px'
             }}>
-                {/* แสดงรูปของรอบปัจจุบัน */}
+                {/* แสดงวิดีโอแทนรูป */}
                 {currentQuestionData && (
-                    <Image
-                        src={currentQuestionData.image}
-                        alt={`รอบที่ ${currentRound}`}
-                        width={600}          
-                        height={350}        
-                        style={{ borderRadius: '10px', objectFit: 'cover' }}
-                    />
+                    <video
+                        key={currentQuestionData.video} // บังคับให้ reload เมื่อเปลี่ยนวิดีโอ
+                        src={currentQuestionData.video}
+                        width={600}          // ขนาดเท่ากับรูปเดิม
+                        height={350}         // ขนาดเท่ากับรูปเดิม
+                        autoPlay             // เล่นอัตโนมัติ
+                        loop                 // เล่นวนซ้ำ
+                        muted                // ไม่มีเสียง
+                        playsInline          // สำหรับมือถือ
+                        controls={false}     // ไม่แสดงตัวควบคุม
+                        preload="auto"       // โหลดล่วงหน้า
+                        style={{ 
+                            borderRadius: '10px', 
+                            objectFit: 'cover',
+                            backgroundColor: '#000' // พื้นหลังสีดำ
+                        }}
+                        onEnded={() => {
+                            // เล่นใหม่เมื่อจบ
+                            const video = document.querySelector('video') as HTMLVideoElement;
+                            if (video) {
+                                video.currentTime = 0;
+                                video.play();
+                            }
+                        }}
+                    >
+                        <source src={currentQuestionData.video} type="video/mp4" />
+                        เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                    </video>
                 )}
 
                 {/* แสดงข้อมูลรอบปัจจุบัน */}
                 <div style={{ textAlign: 'center', color: 'var(--foreground)' }}>
                     <h2>รอบที่ {currentRound} จาก 5</h2>
-                    <h3>รูปนี้คือสัญลักษณ์อะไร?</h3>
+                    <h3>วิดีโอนี้คือสัญลักษณ์อะไร?</h3>
                     <h4 className='bold font_style' style={{color:"var(--red)"}} >สามารถตอบได้อีก {life}</h4>
                 </div>
 
@@ -309,7 +358,6 @@ export default function Stage() {
                     ))}
                 </div>
 
-                
                 {/* ปุ่มควบคุม */}
                 <div style={{ display: 'flex', gap: '10px' }}>
                     <button 

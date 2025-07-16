@@ -9,9 +9,12 @@ import { FaBook } from "react-icons/fa6";
 import { IoPersonSharp } from "react-icons/io5";
 import { FaRankingStar } from "react-icons/fa6";
 import { GiNotebook } from "react-icons/gi";
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // ← เพิ่ม useEffect
 import '../css/container.css';
 import '../css/component.css';
+import axiosInstance from '../axios'; // ← เพิ่ม import axios
+import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
+
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -19,8 +22,44 @@ interface ClientLayoutProps {
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const { pathname, isAtHome, isAuthPage } = useNavigation();
-  const [name,setname] = useState("TestClient");
+  const [name, setName] = useState("กำลังโหลด..."); // ← เปลี่ยนค่าเริ่มต้น
   const router = useRouter();
+
+  // ← เพิ่ม useEffect เรียก API ดึงชื่อผู้ใช้
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const response = await axiosInstance.get("/getdata");
+        if (response.data.success) {
+          const userData = response.data.user;
+          // ใช้ชื่อจริง หรือ username ถ้าไม่มีชื่อจริง
+          const displayName = userData.name 
+            ? `${userData.name} ${userData.surname || ''}`.trim()
+            : userData.username || "ผู้ใช้";
+          
+          setName(displayName);
+        } else {
+          
+          setName("ผู้ใช้");
+        }
+      } catch (error:any) {
+        console.error("Error fetching user data:", error);
+        
+        // ถ้า error 401 (unauthorized) ให้ redirect ไป login
+        if (error.response?.status === 401) {
+
+          router.push("/login");
+        } else {
+          setName("ผู้ใช้");
+        }
+      }
+    };
+
+    // เรียก API เฉพาะเมื่ออยู่ใน home pages
+    if (isAtHome) {
+      fetchUserName();
+    }
+  }, [isAtHome, router]);
 
   console.log('Current page:', pathname);
   console.log('Is at /home:', isAtHome);
@@ -28,10 +67,11 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const handleNavigation = (path: string) => {
     router.push(path);
   };
-  const logoClickHandler = () =>
-  {
+
+  const logoClickHandler = () => {
     return router.push("/");
   }
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
       {isAtHome && (
@@ -74,7 +114,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
           <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", alignItems: "left" }}>
             <h1 className="font_description_white bold Lesson_Button_name" style={{backgroundColor:"var(--coolgray)"}} >{name}</h1>
           </div>
-    </aside>)}
+        </aside>
+      )}
       <main style={{ flex: 1 }}>
         {children}
       </main>
