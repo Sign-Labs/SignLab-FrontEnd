@@ -2,108 +2,169 @@
 import "./vocabulary.css";
 import { useState } from "react";
 
+// Stage 1: ทักทาย (video)
+const greetData = [
+  { id: 1, question:"ฉัน", video: "/chapter/stage1/01.mp4" },
+  { id: 2, question: "ขอโทษ", video: "/chapter/stage1/02.mp4" },
+  { id: 3, question: "สวัสดี", video: "/chapter/stage1/03.mp4" },
+  { id: 4, question: "แนะนำ", video: "/chapter/stage1/04.mp4" },
+  { id: 5, question: "พบ(คนหนึ่งและอีกคนหนึ่งพบกัน)", video: "/chapter/stage1/05.mp4" },
+  { id: 6, question: "พบ(คุณพบกับฉัน)", video: "/chapter/stage1/06.mp4" },
+  { id: 7, question: "ชื่อภาษามือ", video: "/chapter/stage1/07.mp4" },
+  { id: 8, question: "ไม่เป็นไร", video: "/chapter/stage1/08.mp4" },
+  { id: 9, question: "ไม่สบาย", video: "/chapter/stage1/09.mp4" },
+  { id: 10, question: "ใช่", video: "/chapter/stage1/10.mp4" },
+  { id: 11, question: "ไม่ใช่", video: "/chapter/stage1/11.mp4" },
+  { id:12, question: "ขอบคุณ", video: "/chapter/stage1/12.mp4" },
+  { id: 13, question: "สบายดี", video: "/chapter/stage1/13.mp4" },
+];
+
+// Stage 2: ตัวเลข (image)
+const numberData = [
+  { id: 1, question: "1", image: "/chapter/stage2/1.png" },
+  { id: 2, question: "2", image: "/chapter/stage2/2.png" },
+  { id: 3, question: "3", image: "/chapter/stage2/3.png" },
+  { id: 4, question: "4", image: "/chapter/stage2/4.png" },
+  { id: 5, question: "5", image: "/chapter/stage2/5.png" },
+  { id: 6, question: "6", image: "/chapter/stage2/6.png" },
+  { id: 7, question: "7", image: "/chapter/stage2/7.png" },
+  { id: 8, question: "8", image: "/chapter/stage2/8.png" },
+  { id: 9, question: "9", image: "/chapter/stage2/9.png" },
+  { id: 10, question: "10", image: "/chapter/stage2/10.png" },
+  { id: 11, question: "11", image: "/chapter/stage2/11.png" },
+  { id: 12, question: "12", image: "/chapter/stage2/12.png" },
+  { id: 13, question: "13", image: "/chapter/stage2/13.png" },
+  { id: 14, question: "14", image: "/chapter/stage2/14.png" },
+  { id: 15, question: "15", image: "/chapter/stage2/15.png" },
+  { id: 16, question: "16", image: "/chapter/stage2/16.png" },
+  { id: 17, question: "17", image: "/chapter/stage2/17.png" },
+  { id: 18, question: "18", image: "/chapter/stage2/18.png" },
+  { id: 19, question: "19", image: "/chapter/stage2/19.png" },
+  { id: 20, question: "20", image: "/chapter/stage2/20.png" },
+  { id: 21, question: "30", image: "/chapter/stage2/21.png" },
+  { id: 22, question: "40", image: "/chapter/stage2/22.png" },
+  { id: 23, question: "50", image: "/chapter/stage2/23.png" },
+  { id: 24, question: "60", image: "/chapter/stage2/24.png" },
+  { id: 25, question: "70", image: "/chapter/stage2/25.png" },
+  { id: 26, question: "80", image: "/chapter/stage2/26.png" },
+  { id: 27, question: "90", image: "/chapter/stage2/27.png" },
+  { id: 28, question: "100", image: "/chapter/stage2/28.png" },
+  { id: 29, question: "1,000", image: "/chapter/stage2/29.png" },
+  { id: 30, question: "10,000", image: "/chapter/stage2/30.png" },
+  { id: 31, question: "100,000", image: "/chapter/stage2/31.png" },
+  { id: 32, question: "1,000,000", image: "/chapter/stage2/32.png" },
+  { id: 33, question: "10,000,000", image: "/chapter/stage2/33.png" },
+  { id: 34, question: "100,000,000", image: "/chapter/stage2/34.png" },
+];
+
+// Stage 5: วันและเวลา (video)
+const timeData = [
+  { id: 1, question: "วัน", video: "/chapter/stage5/01.mp4" },
+  { id: 2, question: "สัปดาห์", video: "/chapter/stage5/02.mp4" },
+  { id: 3, question: "เดือน", video: "/chapter/stage5/03.mp4" },
+  { id: 4, question: "ปี", video: "/chapter/stage5/04.mp4" },
+  { id: 5, question: "ชั่วโมง", video: "/chapter/stage5/05.mp4" },
+  { id: 6, question: "นาที", video: "/chapter/stage5/06.mp4" },
+  { id: 7, question: "วินาที", video: "/chapter/stage5/07.mp4" },
+  { id: 8, question: "ขณะนี้", video: "/chapter/stage5/08.mp4" },
+  { id: 9, question: "เมื่อวานนี้", video: "/chapter/stage5/09.mp4" },
+  { id: 10, question: "มะรืนนี้", video: "/chapter/stage5/10.mp4" },
+  { id: 11, question: "เมื่อวานซืน", video: "/chapter/stage5/11.mp4" },
+  { id: 12, question: "วันจันทร์", video: "/chapter/stage5/12.mp4" },
+  { id: 13, question: "วันอังคาร", video: "/chapter/stage5/13.mp4" },
+  { id: 14, question: "วันพุธ", video: "/chapter/stage5/14.mp4" },
+  { id: 15, question: "วันพฤหัสบดี", video: "/chapter/stage5/15.mp4" },
+  { id: 16, question: "วันศุกร์", video: "/chapter/stage5/16.mp4" },
+  { id: 17, question: "วันเสาร์", video: "/chapter/stage5/17.mp4" },
+  { id: 18, question: "วันอาทิตย์", video: "/chapter/stage5/18.mp4" },
+  { id: 19, question: "มกราคม", video: "/chapter/stage5/19.mp4" },
+  { id: 20, question: "กุมภาพันธ์", video: "/chapter/stage5/20.mp4" },
+  { id: 21, question: "มีนาคม", video: "/chapter/stage5/21.mp4" },
+  { id: 22, question: "เมษายน", video: "/chapter/stage5/22.mp4" },
+  { id: 23, question: "พฤษภาคม", video: "/chapter/stage5/23.mp4" },
+  { id: 24, question: "มิถุนายน", video: "/chapter/stage5/24.mp4" },
+  { id: 25, question: "กรกฎาคม", video: "/chapter/stage5/25.mp4" },
+  { id: 26, question: "สิงหาคม", video: "/chapter/stage5/26.mp4" },
+  { id: 27, question: "กันยายน", video: "/chapter/stage5/27.mp4" },
+  { id: 28, question: "ตุลาคม", video: "/chapter/stage5/28.mp4" },
+  { id: 29, question: "พฤศจิกายน", video: "/chapter/stage5/29.mp4" },
+  { id: 30, question: "ธันวาคม", video: "/chapter/stage5/30.mp4" },
+];
+
 export default function Vocabulary() {
   const [popupOpen, setPopupOpen] = useState(false);
-  const [popupText, setPopupText] = useState("");
+  const [popupData, setPopupData] = useState<any>(null);
 
-  const handlePopup = (text: string) => {
-    setPopupText(text);
+  const handlePopup = (data: any) => {
+    setPopupData(data);
     setPopupOpen(true);
   };
 
   const closePopup = () => setPopupOpen(false);
+
+  // เลือก media ที่จะแสดงใน popup
+  const renderPopupMedia = () => {
+    if (!popupData) return null;
+    if (popupData.video) {
+      return (
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+          <video
+            src={popupData.video}
+            controls
+            width={320}
+            style={{ borderRadius: 12, background: "#000" }}
+            preload="auto"
+          />
+        </div>
+      );
+    }
+    if (popupData.image) {
+      return (
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+          <img src={popupData.image} alt={popupData.question} width={320} style={{ borderRadius: 12 }} />
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="vocab-bg">
       <div className="vocab-section">
         <div className="vocab-title">การทักทายแนะนำตนเอง</div>
         <div className="vocab-grid">
-          <button className="vocab-card" onClick={() => handlePopup("สวัสดี")}>สวัสดี</button>
-          <button className="vocab-card" onClick={() => handlePopup("ฉัน")}>ฉัน</button>
-          <button className="vocab-card" onClick={() => handlePopup("แนะนำ")}>แนะนำ</button>
-          <button className="vocab-card" onClick={() => handlePopup("สบายดี")}>สบายดี</button>
-          <button className="vocab-card" onClick={() => handlePopup("ขอบคุณ")}>ขอบคุณ</button>
-          <button className="vocab-card" onClick={() => handlePopup("ขอโทษ")}>ขอโทษ</button>
-          <button className="vocab-card" onClick={() => handlePopup("พบ")}>พบ</button>
-          <button className="vocab-card" onClick={() => handlePopup("ชื่อภาษามือ")}>ชื่อภาษามือ</button>
-          <button className="vocab-card" onClick={() => handlePopup("ไม่เป็นไร")}>ไม่เป็นไร</button>
-          <button className="vocab-card" onClick={() => handlePopup("ไม่สบาย")}>ไม่สบาย</button>
-          <button className="vocab-card" onClick={() => handlePopup("ใช่")}>ใช่</button>
-          <button className="vocab-card" onClick={() => handlePopup("ไม่ใช่")}>ไม่ใช่</button>
+          {greetData.map(item => (
+            <button className="vocab-card" key={item.id} onClick={() => handlePopup(item)}>
+              {item.question}
+            </button>
+          ))}
         </div>
       </div>
       <div className="vocab-section">
         <div className="vocab-title">ตัวเลข</div>
         <div className="vocab-grid">
-          <button className="vocab-card" onClick={() => handlePopup("1")}>1</button>
-          <button className="vocab-card" onClick={() => handlePopup("2")}>2</button>
-          <button className="vocab-card" onClick={() => handlePopup("3")}>3</button>
-          <button className="vocab-card" onClick={() => handlePopup("4")}>4</button>
-          <button className="vocab-card" onClick={() => handlePopup("5")}>5</button>
-          <button className="vocab-card" onClick={() => handlePopup("6")}>6</button>
-          <button className="vocab-card" onClick={() => handlePopup("7")}>7</button>
-          <button className="vocab-card" onClick={() => handlePopup("8")}>8</button>
-          <button className="vocab-card" onClick={() => handlePopup("9")}>9</button>
-          <button className="vocab-card" onClick={() => handlePopup("10")}>10</button>
-          <button className="vocab-card" onClick={() => handlePopup("11")}>11</button>
-          <button className="vocab-card" onClick={() => handlePopup("12")}>12</button>
-          <button className="vocab-card" onClick={() => handlePopup("13")}>13</button>
-          <button className="vocab-card" onClick={() => handlePopup("14")}>14</button>
-          <button className="vocab-card" onClick={() => handlePopup("15")}>15</button>
-          <button className="vocab-card" onClick={() => handlePopup("16")}>16</button>
-          <button className="vocab-card" onClick={() => handlePopup("17")}>17</button>
-          <button className="vocab-card" onClick={() => handlePopup("18")}>18</button>
-          <button className="vocab-card" onClick={() => handlePopup("19")}>19</button>
-          <button className="vocab-card" onClick={() => handlePopup("20")}>20</button>
-          <button className="vocab-card" onClick={() => handlePopup("30")}>30</button>
-          <button className="vocab-card" onClick={() => handlePopup("40")}>40</button>
-          <button className="vocab-card" onClick={() => handlePopup("50")}>50</button>
-          <button className="vocab-card" onClick={() => handlePopup("60")}>60</button>
-          <button className="vocab-card" onClick={() => handlePopup("70")}>70</button>
-          <button className="vocab-card" onClick={() => handlePopup("80")}>80</button>
-          <button className="vocab-card" onClick={() => handlePopup("90")}>90</button>
-          <button className="vocab-card" onClick={() => handlePopup("100")}>100</button>
+          {numberData.map(item => (
+            <button className="vocab-card" key={item.id} onClick={() => handlePopup(item)}>
+              {item.question}
+            </button>
+          ))}
         </div>
       </div>
       <div className="vocab-section">
         <div className="vocab-title">วันและเวลา</div>
         <div className="vocab-grid">
-          <button className="vocab-card" onClick={() => handlePopup("วันจันทร์")}>วันจันทร์</button>
-          <button className="vocab-card" onClick={() => handlePopup("วันอังคาร")}>วันอังคาร</button>
-          <button className="vocab-card" onClick={() => handlePopup("วันพุธ")}>วันพุธ</button>
-          <button className="vocab-card" onClick={() => handlePopup("วันพฤหัสบดี")}>วันพฤหัสบดี</button>
-          <button className="vocab-card" onClick={() => handlePopup("วันศุกร์")}>วันศุกร์</button>
-          <button className="vocab-card" onClick={() => handlePopup("วันเสาร์")}>วันเสาร์</button>
-          <button className="vocab-card" onClick={() => handlePopup("วันอาทิตย์")}>วันอาทิตย์</button>
-          <button className="vocab-card" onClick={() => handlePopup("ตอนนี้")}>ตอนนี้</button>
-          <button className="vocab-card" onClick={() => handlePopup("เมื่อวานนี้")}>เมื่อวานนี้</button>
-          <button className="vocab-card" onClick={() => handlePopup("มะรืนนี้")}>มะรืนนี้</button>
-          <button className="vocab-card" onClick={() => handlePopup("เมื่อวานซืน")}>เมื่อวานซืน</button>
-          <button className="vocab-card" onClick={() => handlePopup("วัน")}>วัน</button>
-          <button className="vocab-card" onClick={() => handlePopup("สัปดาห์")}>สัปดาห์</button>
-          <button className="vocab-card" onClick={() => handlePopup("เดือน")}>เดือน</button>
-          <button className="vocab-card" onClick={() => handlePopup("ปี")}>ปี</button>
-          <button className="vocab-card" onClick={() => handlePopup("ชั่วโมง")}>ชั่วโมง</button>
-          <button className="vocab-card" onClick={() => handlePopup("นาที")}>นาที</button>
-          <button className="vocab-card" onClick={() => handlePopup("วินาที")}>วินาที</button>
-          <button className="vocab-card" onClick={() => handlePopup("มกราคม")}>มกราคม</button>
-          <button className="vocab-card" onClick={() => handlePopup("กุมภาพันธ์")}>กุมภาพันธ์</button>
-          <button className="vocab-card" onClick={() => handlePopup("มีนาคม")}>มีนาคม</button>
-          <button className="vocab-card" onClick={() => handlePopup("เมษายน")}>เมษายน</button>
-          <button className="vocab-card" onClick={() => handlePopup("พฤษภาคม")}>พฤษภาคม</button>
-          <button className="vocab-card" onClick={() => handlePopup("มิถุนายน")}>มิถุนายน</button>
-          <button className="vocab-card" onClick={() => handlePopup("กรกฎาคม")}>กรกฎาคม</button>
-          <button className="vocab-card" onClick={() => handlePopup("สิงหาคม")}>สิงหาคม</button>
-          <button className="vocab-card" onClick={() => handlePopup("กันยายน")}>กันยายน</button>
-          <button className="vocab-card" onClick={() => handlePopup("ตุลาคม")}>ตุลาคม</button>
-          <button className="vocab-card" onClick={() => handlePopup("พฤศจิกายน")}>พฤศจิกายน</button>
-          <button className="vocab-card" onClick={() => handlePopup("ธันวาคม")}>ธันวาคม</button>
+          {timeData.map(item => (
+            <button className="vocab-card" key={item.id} onClick={() => handlePopup(item)}>
+              {item.question}
+            </button>
+          ))}
         </div>
-        </div>
-        {popupOpen && (
+      </div>
+      {popupOpen && popupData && (
         <div className="vocab-popup-bg" onClick={closePopup}>
           <div className="vocab-popup" onClick={e => e.stopPropagation()}>
-            <div style={{ fontSize: "2rem", marginBottom: "16px" }}>{popupText}</div>
+            <div style={{ fontSize: "2rem", marginBottom: "16px" }}>{popupData.question}</div>
+            {renderPopupMedia()}
             <button className="vocab-popup-close" onClick={closePopup}>ปิด</button>
           </div>
         </div>
