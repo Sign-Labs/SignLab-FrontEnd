@@ -9,7 +9,7 @@ import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, r
 import '@/app/css/component.css';
 import '@/app/css/container.css';
 import '@/app/css/stage.css';
-import axiosInstance from "@/app/axios"; // ← แก้ไข import
+import axiosInstance from "@/app/axios"; 
 import { jwtDecode } from "jwt-decode";
 
 export default function Stage() {
@@ -23,12 +23,15 @@ export default function Stage() {
     const [currentRound, setCurrentRound] = useState(1); // รอบปัจจุบัน
     const [gameQuestions, setGameQuestions] = useState<any[]>([]); // เก็บคำถาม 5 รอบ
     const [life, setlife] = useState(5); // จำนวนชีวิตเริ่มต้น
+    // ← เพิ่ม state สำหรับ MQTT
+    const [isListening, setIsListening] = useState(false);
+    const [mqttData, setMqttData] = useState<string>('');
 
     const params = useParams();
-    const stageId = Array.isArray(params.stageid) ? parseInt(params.stageid[0]) : parseInt(params.stageid as string); // ← แก้ไข type
-    const chapterNumber = 2; // ← แก้ไขให้ตรงกับ folder stage2
+    const stageId = Array.isArray(params.stageid) ? parseInt(params.stageid[0]) : parseInt(params.stageid as string);
+    const chapterNumber = 2;
     
-    console.log("Chapter:", chapterNumber); // 2
+    console.log("Chapter:", chapterNumber);
     console.log("Stage ID:", stageId);
 
     const questionData = [
@@ -68,22 +71,96 @@ export default function Stage() {
         { id: 34, question: "100,000,000", hint: "หนึ่งร้อยล้าน", image: "/chapter/stage2/34.png" },
     ];
 
+    // ← เพิ่ม mapping ระหว่าง MQTT data กับคำตอบ
+    const mqttToAnswerMap: { [key: string]: string } = {
+        "one": "1",
+        "two": "2", 
+        "three": "3",
+        "four": "4",
+        "five": "5",
+        "six": "6",
+        "seven": "7",
+        "eight": "8",
+        "nine": "9",
+        "ten": "10",
+        "eleven": "11",
+        "twelve": "12",
+        "thirteen": "13",
+        "fourteen": "14",
+        "fifteen": "15",
+        "sixteen": "16",
+        "seventeen": "17",
+        "eighteen": "18",
+        "nineteen": "19",
+        "twenty": "20",
+        "thirty": "30",
+        "forty": "40",
+        "fifty": "50",
+        "sixty": "60",
+        "seventy": "70",
+        "eighty": "80",
+        "ninety": "90",
+        "hundred": "100",
+        "thousand": "1,000",
+        "ten_thousand": "10,000",
+        "hundred_thousand": "100,000",
+        "million": "1,000,000",
+        "ten_million": "10,000,000",
+        "hundred_million": "100,000,000"
+    };
+
+    // ← ฟังก์ชันดึงข้อมูลจาก MQTT API
+    const fetchMqttData = async () => {
+        try {
+            const response = await fetch('http://130.33.96.46:3000/api/mqtt/answer');
+            const data = await response.json();
+            
+            if (data && data.data) {
+                setMqttData(data.data);
+                console.log("MQTT Data received:", data.data);
+                
+                // ตรวจสอบว่าข้อมูลที่ได้ตรงกับคำตอบหรือไม่
+                const mappedAnswer = mqttToAnswerMap[data.data.toLowerCase()];
+                if (mappedAnswer && mappedAnswer === correctAnswer) {
+                    console.log("MQTT Answer matched! Auto-advancing...");
+                    checkAnswer(mappedAnswer);
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching MQTT data:", error);
+        }
+    };
+
+    // ← useEffect สำหรับ polling MQTT data
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        
+        if (isListening) {
+            interval = setInterval(() => {
+                fetchMqttData();
+            }, 2000); // ตรวจสอบทุก 2 วินาที
+        }
+        
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [isListening, correctAnswer]);
+
     // ฟังก์ชันสร้างตัวเลือก
     const generateChoices = (correctAnswer: string) => {
         const wrongAnswers = questionData
             .filter(item => item.question !== correctAnswer)
             .map(item => item.question);
         
-        // สุ่มเลือก 3 คำตอบผิด
         const shuffledWrong = wrongAnswers.sort(() => Math.random() - 0.5);
         const selectedWrong = shuffledWrong.slice(0, 3);
         
-        // รวมกับคำตอบถูก แล้วสุ่มลำดับ
         const allChoices = [...selectedWrong, correctAnswer];
         return allChoices.sort(() => Math.random() - 0.5);
     };
 
-    // สุ่มคำถาม 5 รอบ
     const generateGameQuestions = () => {
         const shuffledQuestions = [...questionData].sort(() => Math.random() - 0.5);
         const selected5Questions = shuffledQuestions.slice(0, 5);
@@ -99,15 +176,13 @@ export default function Stage() {
         return gameData;
     };
 
-    // เริ่มเกมใหม่
     const startNewGame = () => {
         const newGameQuestions = generateGameQuestions();
         setGameQuestions(newGameQuestions);
         setCurrentRound(1);
         setProgressstage(0);
-        setlife(5); // ← รีเซ็ตชีวิต
+        setlife(5);
         
-        // ตั้งค่ารอบแรก
         if (newGameQuestions.length > 0) {
             const firstQuestion = newGameQuestions[0];
             setCorrectAnswer(firstQuestion.correctAnswer);
@@ -116,10 +191,9 @@ export default function Stage() {
         }
     };
 
-    // ไปรอบถัดไป
     const nextRound = () => {
         if (currentRound < 5 && currentRound < gameQuestions.length) {
-            const nextRoundData = gameQuestions[currentRound]; // currentRound เป็น 0-based
+            const nextRoundData = gameQuestions[currentRound];
             setCurrentRound(prev => prev + 1);
             setProgressstage(prev => prev + 1);
             setCorrectAnswer(nextRoundData.correctAnswer);
@@ -140,7 +214,7 @@ export default function Stage() {
             showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${correctAnswer}`);
 
             if (currentRound < 5) {
-                nextRound(); // ไปรอบถัดไป
+                nextRound();
             } else {
                 setProgressstage(prev => prev + 1);
 
@@ -154,7 +228,7 @@ export default function Stage() {
                     const decoded: any = jwtDecode(token);
                     const userId = decoded.id;
 
-                    const res = await axiosInstance.post("/update-progress", { // ← ใช้ axiosInstance
+                    const res = await axiosInstance.post("/update-progress", {
                         user_id: userId,
                         stage_id: stageId
                     });
@@ -176,7 +250,7 @@ export default function Stage() {
             }
         } else {
             showErrorPopup(`ผิด! ยังไม่ถูกต้อง`);
-            setlife(prev => prev - 1); // ลดจำนวนชีวิต
+            setlife(prev => prev - 1);
         }
     };
 
@@ -185,10 +259,19 @@ export default function Stage() {
     };
 
     const reset = () => {
-        startNewGame(); // เริ่มเกมใหม่
+        startNewGame();
     };
 
-    // เริ่มเกมเมื่อโหลดหน้า
+    // ← ฟังก์ชันสำหรับเปิด/ปิด MQTT listening
+    const toggleMqttListening = () => {
+        setIsListening(prev => !prev);
+        if (!isListening) {
+            showSuccessPopup("เริ่มตรวจสอบสัญลักษณ์จากกล้อง");
+        } else {
+            showSuccessPopup("หยุดตรวจสอบสัญลักษณ์จากกล้อง");
+        }
+    };
+
     useEffect(() => {
         startNewGame();
     }, []);
@@ -246,7 +329,6 @@ export default function Stage() {
                 alignItems: 'center',
                 gap: '15px'
             }}>
-                {/* แสดงรูปของรอบปัจจุบัน */}
                 {currentQuestionData && (
                     <Image
                         src={currentQuestionData.image}
@@ -257,14 +339,18 @@ export default function Stage() {
                     />
                 )}
 
-                {/* แสดงข้อมูลรอบปัจจุบัน */}
                 <div style={{ textAlign: 'center', color: 'var(--foreground)' }}>
                     <h2>รอบที่ {currentRound} จาก 5</h2>
                     <h3>รูปนี้คือสัญลักษณ์อะไร?</h3>
                     <h4 className='bold font_style' style={{color:"var(--red)"}} >สามารถตอบได้อีก {life} ครั้ง</h4>
+                    {/* ← เพิ่มแสดงสถานะ MQTT */}
+                    {isListening && (
+                        <p style={{color: 'var(--green)', fontSize: '14px'}}>
+                             (ข้อมูลจากถุงมือ: {mqttData || 'ไม่มี'})
+                        </p>
+                    )}
                 </div>
 
-                {/* แสดงตัวเลือกของรอบปัจจุบัน */}
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: '1fr 1fr', 
@@ -291,10 +377,12 @@ export default function Stage() {
                     ))}
                 </div>
 
-                {/* ปุ่มควบคุม */}
-                <div style={{ display: 'flex', gap: '10px' }}>
+                {/* ← เพิ่มปุ่ม MQTT control */}
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                   
+                    
                     <button 
-                        onClick={() => showSuccessPopup(`คำใบ้: ${currentQuestionData?.hint || ''}`)} // ← เพิ่ม optional chaining
+                        onClick={() => showSuccessPopup(`คำใบ้: ${currentQuestionData?.hint || ''}`)}
                         style={{
                             padding: '10px 20px',
                             background: 'var(--softorange)',
@@ -306,6 +394,7 @@ export default function Stage() {
                     >
                         <p className ="font-botton font-style">คำใบ้</p>
                     </button>
+                    
                     <button 
                         onClick={reset}
                         style={{
