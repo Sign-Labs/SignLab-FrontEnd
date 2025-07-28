@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Navbar from './Navcomponent';
 import { CgProfile } from "react-icons/cg";
 import { FaBook } from "react-icons/fa6";
+import { MdWebAsset } from "react-icons/md";
+
 import { IoPersonSharp } from "react-icons/io5";
 import { FaRankingStar } from "react-icons/fa6";
 import { GiNotebook } from "react-icons/gi";
@@ -85,6 +87,13 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                 onClick={() => handleNavigation("/lessons")}
                 icon={<GiNotebook size={25}/>}
                 label="บทเรียน"
+              />
+              <Navbar 
+                path="/chapter-camera" 
+                currentPath={pathname} 
+                onClick={() => handleNavigation("/chapter-camera")}
+                icon={<MdWebAsset size={25} />}
+                label="เรียนรู้คำศัพท์"
               />
               <Navbar 
                 path="/vocabulary" 
