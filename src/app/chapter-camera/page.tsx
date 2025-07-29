@@ -10,9 +10,9 @@ import '@/app/css/stage.css';
 export default function Stage() {
     const router = useRouter();
     const [currentQuestion, setCurrentQuestion] = useState<any>(null);
-    const [isCameraOpen, setIsCameraOpen] = useState(false);
-    const [stream, setStream] = useState<MediaStream | null>(null);
-    const videoRef = useRef<HTMLVideoElement>(null);
+    const [mqttData, setMqttData] = useState('');
+    const [isCorrect, setIsCorrect] = useState(false);
+    const [lastMqttData, setLastMqttData] = useState(''); // เก็บข้อมูล API ครั้งก่อน
 
     const params = useParams();
 
@@ -97,6 +97,71 @@ export default function Stage() {
         },
     ];
 
+    // ฟังก์ชันดึงข้อมูลจาก API อัตโนมัติ
+    const fetchMqttData = async () => {
+        try {
+            const response = await fetch('http://130.33.96.46:3000/api/mqtt/answer');
+            const data = await response.json();
+            
+            if (data && data.data) {
+                const receivedAnswer = data.data.trim().replace(/\r\n/g, '');
+                
+                // ✅ เช็คว่าข้อมูลใหม่หรือไม่ - เปรียบเทียบกับครั้งก่อน
+                if (receivedAnswer !== lastMqttData && receivedAnswer !== '') {
+                    console.log("🆕 ข้อมูลใหม่จาก API:", receivedAnswer);
+                    console.log("📋 ข้อมูลครั้งก่อน:", lastMqttData);
+                    
+                    // อัปเดตข้อมูลที่ได้รับและเก็บค่าก่อนหน้า
+                    setMqttData(receivedAnswer);
+                    setLastMqttData(receivedAnswer);
+                    
+                    // 🎯 ตรวจสอบคำตอบเฉพาะเมื่อมีข้อมูลใหม่
+                    if (currentQuestion && receivedAnswer === currentQuestion.correctAnswer) {
+                        
+                        setIsCorrect(true);
+                        showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${currentQuestion.correctAnswer}`);
+                        
+                        // รอ 2 วินาที แล้วสุ่มคำถามใหม่
+                        setTimeout(() => {
+                            startNewQuestion();
+                            setIsCorrect(false);
+                        }, 2000);
+                        
+                    } else if (receivedAnswer !== currentQuestion?.correctAnswer) {
+                       
+                    }
+                } else {
+                    // ข้อมูลเดิม - ไม่ต้องเช็คคำตอบ
+                    console.log("🔄 ข้อมูลเดิม - ไม่ต้องเช็ค");
+                }
+            } else {
+                // ไม่มีข้อมูลจาก API
+                if (mqttData !== 'ไม่มีข้อมูล') {
+                    setMqttData('ไม่มีข้อมูล');
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching MQTT data:", error);
+            if (mqttData !== 'ไม่สามารถเชื่อมต่อ API ได้') {
+                setMqttData('ไม่สามารถเชื่อมต่อ API ได้');
+            }
+        }
+    };
+
+    // ตั้งค่า interval สำหรับตรวจสอบ API อัตโนมัติ
+    useEffect(() => {
+        const interval = setInterval(() => {
+            fetchMqttData();
+        }, 1000); // ตรวจสอบทุก 1 วินาที
+
+        // เรียกครั้งแรกทันที
+        fetchMqttData();
+        
+        return () => {
+            clearInterval(interval);
+        };
+    }, [currentQuestion, lastMqttData, mqttData]);
+
     const generateRandomQuestion = () => {
         const randomIndex = Math.floor(Math.random() * questionData.length);
         const selectedQuestion = questionData[randomIndex];
@@ -111,109 +176,10 @@ export default function Stage() {
     const startNewQuestion = () => {
         const newQuestion = generateRandomQuestion();
         setCurrentQuestion(newQuestion);
+        setIsCorrect(false);
+        setMqttData(''); // รีเซ็ตข้อมูล MQTT
+        setLastMqttData(''); // รีเซ็ตข้อมูล MQTT ครั้งก่อน
     };
-
-    const startCamera = async () => {
-        try {
-            // ตรวจสอบว่าเบราว์เซอร์รองรับหรือไม่
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                showErrorPopup('เบราว์เซอร์ของคุณไม่รองรับการใช้งานกล้อง\nกรุณาใช้ Chrome, Firefox หรือ Edge เวอร์ชันใหม่');
-                return false;
-            }
-
-            console.log('Requesting camera access...');
-            
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video: {
-                    width: { ideal: 640, min: 320, max: 1280 },
-                    height: { ideal: 480, min: 240, max: 720 },
-                    facingMode: 'user'
-                },
-                audio: false
-            });
-            
-            console.log('Camera access granted!');
-            setStream(mediaStream);
-            
-            if (videoRef.current) {
-                videoRef.current.srcObject = mediaStream;
-                
-                // รอให้วิดีโอโหลดเสร็จ
-                videoRef.current.onloadedmetadata = () => {
-                    console.log('Video metadata loaded');
-                    if (videoRef.current) {
-                        videoRef.current.play().catch(console.error);
-                    }
-                };
-            }
-            
-            return true;
-        } catch (error: any) {
-            console.error('Error accessing camera:', error);
-            
-            let errorMessage = 'ไม่สามารถเปิดกล้องได้';
-            
-            switch (error.name) {
-                case 'NotAllowedError':
-                case 'PermissionDeniedError':
-                    errorMessage = 'กรุณาอนุญาตการใช้งานกล้อง\n\n1. คลิกไอคอนกล้องที่แถบ URL\n2. เลือก "อนุญาต" หรือ "Allow"\n3. รีเฟรชหน้าเว็บ';
-                    break;
-                case 'NotFoundError':
-                case 'DevicesNotFoundError':
-                    errorMessage = 'ไม่พบกล้องในอุปกรณ์ของคุณ\nกรุณาตรวจสอบการเชื่อมต่อกล้อง';
-                    break;
-                case 'NotReadableError':
-                case 'TrackStartError':
-                    errorMessage = 'กล้องถูกใช้งานโดยแอปอื่นอยู่\nกรุณาปิดแอปอื่นที่ใช้กล้อง';
-                    break;
-                case 'OverconstrainedError':
-                case 'ConstraintNotSatisfiedError':
-                    errorMessage = 'กล้องไม่รองรับขนาดที่ต้องการ\nลองใช้กล้องอื่น';
-                    break;
-                case 'SecurityError':
-                    errorMessage = 'การเชื่อมต่อไม่ปลอดภัย\nต้องใช้ HTTPS หรือ localhost';
-                    break;
-                default:
-                    errorMessage = `เกิดข้อผิดพลาด: ${error.message || 'ไม่ทราบสาเหตุ'}`;
-            }
-            
-            showErrorPopup(errorMessage);
-            return false;
-        }
-    };
-
-    const stopCamera = () => {
-        if (stream) {
-            stream.getTracks().forEach(track => {
-                track.stop();
-            });
-            setStream(null);
-            
-            if (videoRef.current) {
-                videoRef.current.srcObject = null;
-            }
-        }
-    };
-
-    const toggleCamera = async () => {
-        if (isCameraOpen) {
-            stopCamera();
-            setIsCameraOpen(false);
-            showSuccessPopup("ปิดกล้องแล้ว");
-        } else {
-            const success = await startCamera();
-            if (success) {
-                setIsCameraOpen(true);
-                showSuccessPopup("เปิดกล้องแล้ว! ลองทำท่าภาษามือตามวิดีโอ");
-            }
-        }
-    };
-
-    useEffect(() => {
-        return () => {
-            stopCamera();
-        };
-    }, [stream]);
 
     useEffect(() => {
         startNewQuestion();
@@ -239,7 +205,6 @@ export default function Stage() {
                     <AiOutlineLeft size={35} className="back-button" />
                 </button>
 
-               
 
                 <div style={{ width: '35px' }}></div>
             </div>
@@ -250,24 +215,21 @@ export default function Stage() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '15px'
+                gap: '10px'
             }}>
-                {/* วิดีโอและกล้อง */}
+                {/* วิดีโอตัวอย่าง */}
                 <div style={{ 
                     display: 'flex', 
-                    gap: '20px', 
-                    alignItems: 'flex-start',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    marginBottom: '20px'
                 }}>
-                    {/* วิดีโอตัวอย่าง */}
                     {currentQuestion && (
                         <div style={{ textAlign: 'center' }}>
                             <video
                                 key={currentQuestion.video}
                                 src={currentQuestion.video}
-                                width={400}          
-                                height={300}         
+                                width={450}          
+                                height={350}         
                                 autoPlay             
                                 loop                 
                                 muted                
@@ -275,10 +237,11 @@ export default function Stage() {
                                 controls={false}     
                                 preload="auto"       
                                 style={{ 
-                                    borderRadius: '10px', 
+                                    borderRadius: '15px', 
                                     objectFit: 'cover',
                                     backgroundColor: '#000',
-                                    border: '2px solid var(--lightgray)'
+                                    border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
+                                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
                                 }}
                                 onError={(e) => {
                                     console.error('Video loading error:', e);
@@ -289,124 +252,116 @@ export default function Stage() {
                             </video>
                         </div>
                     )}
-
-                   
-                    {isCameraOpen && (
-                        <div style={{ textAlign: 'center' }}>
-                            <video
-                                ref={videoRef}
-                                width={400}
-                                height={300}
-                                autoPlay
-                                playsInline
-                                muted
-                                style={{ 
-                                    borderRadius: '10px',
-                                    backgroundColor: '#000',
-                                    transform: 'scaleX(-1)',
-                                    border: '2px solid var(--green)'
-                                }}
-                            />
-                        </div>
-                    )}
                 </div>
 
                 {/* แสดงคำตอบ */}
-                <div style={{ textAlign: 'center', color: 'var(--foreground)' }}>
+                <div style={{ textAlign: 'center', color: 'var(--foreground)', marginBottom: '20px' }}>
                     <h2 style={{ 
-                        fontSize: '32px', 
+                        fontSize: '36px', 
                         fontWeight: 'bold',
-                        color: 'var(--boldskyblue)',
-                        margin: '10px 0'
+                        color: isCorrect ? 'var(--green)' : 'var(--boldskyblue)',
+                        textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
                     }}>
                         {currentQuestion?.correctAnswer || 'กำลังโหลด...'}
                     </h2>
                     <h3 style={{ 
-                        fontSize: '18px',
+                        fontSize: '20px',
                         color: 'var(--lightgray)',
-                        margin: '5px 0'
+                        fontStyle: 'italic'
                     }}>
                         ({currentQuestion?.hint || ''})
                     </h3>
-                    <p style={{
-                        fontSize: '16px',
-                        color: 'var(--foreground)',
-                        margin: '15px 0'
-                    }}>
-                        ดูวิดีโอและลองทำท่าตาม
-                    </p>
+                    
+                   
+                       
+                        <div style={{
+                            padding: '10px',
+                            background: 'rgba(255, 255, 255, 0.8)',
+                            borderRadius: '8px',
+                            border: '1px solid rgba(34, 197, 94, 0.2)'
+                        }}>
+                            <p style={{
+                                color: 'var(--foreground)', 
+                                fontSize: '16px',
+                                margin: '0',
+                                fontWeight: 'bold'
+                            }}>
+                                คำตอบล่าสุด : {mqttData || 'รอข้อมูล...'}
+                            </p>
+                        </div>             
                 </div>
 
                 {/* ปุ่มควบคุม */}
                 <div style={{ 
                     display: 'flex', 
-                    gap: '10px', 
+                    gap: '15px', 
                     flexWrap: 'wrap', 
-                    justifyContent: 'center' 
+                    justifyContent: 'center',
+                    marginBottom: '20px'
                 }}>
-                    <button 
-                        onClick={toggleCamera}
-                        style={{
-                            padding: '15px 30px',
-                            background: isCameraOpen ? 'var(--red)' : 'var(--green)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '10px',
-                            cursor: 'pointer',
-                            fontSize: '16px',
-                            fontWeight: 'bold'
-                        }}
-                    >
-                        {isCameraOpen ? 'ปิดกล้อง' : 'เปิดกล้อง'}
-                    </button>
-                    
-                
-                    
                     <button 
                         onClick={startNewQuestion}
                         style={{
-                            padding: '15px 30px',
+                            padding: '18px 35px',
                             background: 'var(--boldskyblue)',
                             color: 'white',
                             border: 'none',
-                            borderRadius: '10px',
+                            borderRadius: '12px',
                             cursor: 'pointer',
-                            fontSize: '16px'
+                            fontSize: '18px',
+                            fontWeight: 'bold',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                            transition: 'all 0.3s ease',
+                            minWidth: '200px'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
                         }}
                     >
-                         คำถามใหม่
+                        สุ่มคำถามใหม่
                     </button>
                 </div>
 
-
                 {/* ข้อมูลการใช้งาน */}
                 <div style={{
-                    padding: '15px',
-                    background: 'rgba(0, 0, 0, 0.05)',
-                    borderRadius: '10px',
+                    padding: '20px',
+                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))',
+                    borderRadius: '15px',
                     textAlign: 'center',
-                    marginTop: '10px',
-                    maxWidth: '500px'
+                    maxWidth: '600px',
+                    border: '1px solid rgba(59, 130, 246, 0.2)'
                 }}>
                     <h4 style={{ 
                         color: 'var(--foreground)', 
-                        margin: '0 0 10px 0',
-                        fontSize: '16px'
+                        margin: '0 0 15px 0',
+                        fontSize: '20px',
+                        fontWeight: 'bold'
                     }}>
-                        📋 วิธีการใช้งาน
+                        วิธีการใช้งาน
                     </h4>
-                    <ul style={{
+                    <div style={{
                         textAlign: 'left',
                         color: 'var(--coolgray)',
-                        fontSize: '14px',
-                        margin: 0,
-                        paddingLeft: '20px'
+                        fontSize: '16px',
+                        lineHeight: '1.6'
                     }}>
-                        <li>กดปุ่ม "ทดสอบกล้อง" เพื่อตรวจสอบอุปกรณ์</li>
-                        <li>กดปุ่ม "เปิดกล้อง" และอนุญาตการใช้งาน</li>
-                        <li>ดูวิดีโอตัวอย่างและทำท่าตาม</li>
-                        <li>กดปุ่ม "คำถามใหม่" เพื่อสุ่มคำศัพท์ใหม่</li>
-                    </ul>
+                        <ul style={{
+                            margin: '0 0 15px 0',
+                            paddingLeft: '25px'
+                        }}>
+                            <li style={{ marginBottom: '8px' }}>ระบบตรวจสอบข้อมูลจาก API อัตโนมัติทุก 1 วินาที</li>
+                            <li style={{ marginBottom: '8px' }}>เช็คคำตอบเฉพาะเมื่อมีข้อมูลใหม่จาก API</li>
+                            <li style={{ marginBottom: '8px' }}>ดูวิดีโอและทำท่าภาษามือตามที่เห็น</li>
+                            <li style={{ marginBottom: '8px' }}>เมื่อระบบตรวจพบคำตอบถูกต้อง จะไปคำถามใหม่อัตโนมัติ</li>
+                            <li style={{ marginBottom: '8px' }}>หากตอบผิด ระบบจะแจ้งเตือนและให้ลองใหม่</li>
+                            <li>กดปุ่ม "คำถามใหม่" เพื่อสุ่มคำศัพท์ใหม่ได้ตลอดเวลา</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </main>
