@@ -97,7 +97,6 @@ export default function Stage() {
         },
     ];
 
-    // ฟังก์ชันดึงข้อมูลจาก API อัตโนมัติ
     const fetchMqttData = async () => {
         try {
             const response = await fetch('http://130.33.96.46:3000/api/mqtt/answer');
@@ -106,22 +105,21 @@ export default function Stage() {
             if (data && data.data) {
                 const receivedAnswer = data.data.trim().replace(/\r\n/g, '');
                 
-                // ✅ เช็คว่าข้อมูลใหม่หรือไม่ - เปรียบเทียบกับครั้งก่อน
+            
                 if (receivedAnswer !== lastMqttData && receivedAnswer !== '') {
                     console.log("🆕 ข้อมูลใหม่จาก API:", receivedAnswer);
                     console.log("📋 ข้อมูลครั้งก่อน:", lastMqttData);
                     
-                    // อัปเดตข้อมูลที่ได้รับและเก็บค่าก่อนหน้า
+                    
                     setMqttData(receivedAnswer);
                     setLastMqttData(receivedAnswer);
                     
-                    // 🎯 ตรวจสอบคำตอบเฉพาะเมื่อมีข้อมูลใหม่
+                   
                     if (currentQuestion && receivedAnswer === currentQuestion.correctAnswer) {
                         
                         setIsCorrect(true);
                         showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${currentQuestion.correctAnswer}`);
                         
-                        // รอ 2 วินาที แล้วสุ่มคำถามใหม่
                         setTimeout(() => {
                             startNewQuestion();
                             setIsCorrect(false);
@@ -131,11 +129,11 @@ export default function Stage() {
                        
                     }
                 } else {
-                    // ข้อมูลเดิม - ไม่ต้องเช็คคำตอบ
+                   
                     console.log("🔄 ข้อมูลเดิม - ไม่ต้องเช็ค");
                 }
             } else {
-                // ไม่มีข้อมูลจาก API
+               
                 if (mqttData !== 'ไม่มีข้อมูล') {
                     setMqttData('ไม่มีข้อมูล');
                 }
@@ -148,13 +146,13 @@ export default function Stage() {
         }
     };
 
-    // ตั้งค่า interval สำหรับตรวจสอบ API อัตโนมัติ
+  
     useEffect(() => {
         const interval = setInterval(() => {
             fetchMqttData();
-        }, 1000); // ตรวจสอบทุก 1 วินาที
+        }, 1000); 
 
-        // เรียกครั้งแรกทันที
+       
         fetchMqttData();
         
         return () => {
@@ -328,7 +326,7 @@ export default function Stage() {
                 </div>
 
                 {/* ข้อมูลการใช้งาน */}
-                <div style={{
+                {/* <div style={{
                     padding: '20px',
                     background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))',
                     borderRadius: '15px',
@@ -362,7 +360,7 @@ export default function Stage() {
                             <li>กดปุ่ม "คำถามใหม่" เพื่อสุ่มคำศัพท์ใหม่ได้ตลอดเวลา</li>
                         </ul>
                     </div>
-                </div>
+                </div> */}
             </div>
         </main>
     );
