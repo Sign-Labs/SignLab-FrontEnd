@@ -12,88 +12,180 @@ export default function Stage() {
     const [currentQuestion, setCurrentQuestion] = useState<any>(null);
     const [mqttData, setMqttData] = useState('');
     const [isCorrect, setIsCorrect] = useState(false);
-    const [lastMqttData, setLastMqttData] = useState(''); // เก็บข้อมูล API ครั้งก่อน
+    const [lastMqttData, setLastMqttData] = useState('');
 
     const params = useParams();
+
+    // ฟังก์ชันสำหรับ mapping คำตอบ (ภาษาอังกฤษ) เป็นคำถาม (ภาษาไทย)
+    const getQuestionFromAnswer = (answer: string) => {
+        const foundQuestion = questionData.find(item => 
+            item.answer.toLowerCase() === answer.toLowerCase()
+        );
+        return foundQuestion ? foundQuestion.question : answer;
+    };
 
     const questionData = [
         {
             id: 1,
             question: "ฉัน",
+            answer: "me",
             hint: "ตัวเอง",
             video: "/chapter/stage1/01.mp4",
         },
         {
             id: 2,
             question: "ขอโทษ",
+            answer: "sorry",
             hint: "คำที่ใช้แสดงความรู้สึกผิด",
             video: "/chapter/stage1/02.mp4",
         },
         {
             id: 3,
             question: "ขอบคุณ",
+            answer: "thank",
             hint: "ใช้แสดงความรู้สึกขอบคุณ",
             video: "/chapter/stage1/03.mp4",
         },
         {
             id: 4,
             question: "สวัสดี",
+            answer: "hello",
             hint: "คำทักทาย",
             video: "/chapter/stage1/04.mp4",
         },
         {
             id: 5,
             question: "แนะนำ",
+            answer: "introduce",
             hint: "แนะนำตัวหรือสิ่งของ",
             video: "/chapter/stage1/05.mp4",
         },
         {
             id: 6,
             question: "สบายดี",
+            answer: "fine",
             hint: "คำตอบเมื่อมีคนถามว่าสบายดีไหม",
             video: "/chapter/stage1/06.mp4",
         },
         {
             id: 7,
             question: "พบ (คนหนึ่งและอีกคนหนึ่งพบกัน)",
+            answer: "meet",
             hint: "คนหนึ่งและอีกคนหนึ่งพบกัน",
             video: "/chapter/stage1/07.mp4",
         },
         {
             id: 8,
             question: "พบ (คุณพบกับฉัน)",
+            answer: "meet",
             hint: "คุณพบกับฉัน",
             video: "/chapter/stage1/08.mp4",
         },
         {
             id: 9,
             question: "ชื่อภาษามือ",
+            answer: "signname",
             hint: "ชื่อของภาษามือ",
             video: "/chapter/stage1/09.mp4",
         },
         {
             id: 10,
             question: "ไม่เป็นไร",
+            answer: "noproblem",
             hint: "คำที่ใช้เมื่อให้อภัยหรือไม่ถือสา",
             video: "/chapter/stage1/10.mp4",
         },
         {
             id: 11,
             question: "ไม่สบาย",
+            answer: "unwell",
             hint: "รู้สึกเจ็บป่วย",
             video: "/chapter/stage1/11.mp4",
         },
         {
             id: 12,
             question: "ใช่",
+            answer: "yes",
             hint: "คำยืนยัน",
             video: "/chapter/stage1/12.mp4",
         },
         {
             id: 13,
             question: "ไม่ใช่",
+            answer: "no",
             hint: "คำปฏิเสธ",
             video: "/chapter/stage1/13.mp4",
+        },
+        // ตัวเลข 1-10
+        {
+            id: 14,
+            question: "1",
+            answer: "1",
+            hint: "หนึ่ง",
+            image: "/chapter/stage2/1.png",
+        },
+        {
+            id: 15,
+            question: "2",
+            answer: "2",
+            hint: "สอง",
+            image: "/chapter/stage2/2.png",
+        },
+        {
+            id: 16,
+            question: "3",
+            answer: "3",
+            hint: "สาม",
+            image: "/chapter/stage2/3.png",
+        },
+        {
+            id: 17,
+            question: "4",
+            answer: "4",
+            hint: "สี่",
+            image: "/chapter/stage2/4.png",
+        },
+        {
+            id: 18,
+            question: "5",
+            answer: "5",
+            hint: "ห้า",
+            image: "/chapter/stage2/5.png",
+        },
+        {
+            id: 19,
+            question: "6",
+            answer: "6",
+            hint: "หก",
+            image: "/chapter/stage2/6.png",
+        },
+        {
+            id: 20,
+            question: "7",
+            answer: "7",
+            hint: "เจ็ด",
+            image: "/chapter/stage2/7.png",
+        },
+        {
+            id: 21,
+            question: "8",
+            answer: "8",
+            hint: "แปด",
+            image: "/chapter/stage2/8.png",
+        },
+        {
+            id: 22,
+            question: "9",
+            answer: "9",
+            hint: "เก้า",
+            image: "/chapter/stage2/9.png",
+        },
+        {
+            id: 23,
+            question: "10",
+            answer: "10",
+            hint: "สิบ",
+            image: "/chapter/stage2/10.png",
         },
     ];
 
@@ -103,19 +195,16 @@ export default function Stage() {
             const data = await response.json();
             
             if (data && data.data) {
-                const receivedAnswer = data.data.trim().replace(/\r\n/g, '');
+                const receivedAnswer = data.data.trim().replace(/\r\n/g, '').toLowerCase();
                 
             
-                if (receivedAnswer !== lastMqttData && receivedAnswer !== '') {
-                    console.log("🆕 ข้อมูลใหม่จาก API:", receivedAnswer);
-                    console.log("📋 ข้อมูลครั้งก่อน:", lastMqttData);
-                    
+                if (receivedAnswer !== lastMqttData && receivedAnswer !== '') {     
                     
                     setMqttData(receivedAnswer);
                     setLastMqttData(receivedAnswer);
                     
                    
-                    if (currentQuestion && receivedAnswer === currentQuestion.correctAnswer) {
+                    if (currentQuestion && receivedAnswer === currentQuestion.correctAnswer.toLowerCase()) {
                         
                         setIsCorrect(true);
                         showSuccessPopup(`ถูกต้อง! คำตอบคือ: ${currentQuestion.correctAnswer}`);
@@ -125,12 +214,10 @@ export default function Stage() {
                             setIsCorrect(false);
                         }, 2000);
                         
-                    } else if (receivedAnswer !== currentQuestion?.correctAnswer) {
-                       
-                    }
+                    } 
                 } else {
                    
-                    console.log("🔄 ข้อมูลเดิม - ไม่ต้องเช็ค");
+                    console.log(" ข้อมูลเดิม - ไม่ต้องเช็ค");
                 }
             } else {
                
@@ -165,9 +252,11 @@ export default function Stage() {
         const selectedQuestion = questionData[randomIndex];
         
         return {
-            correctAnswer: selectedQuestion.question,
+            correctAnswer: selectedQuestion.answer,
+            question: selectedQuestion.question,
             hint: selectedQuestion.hint,
-            video: selectedQuestion.video
+            video: selectedQuestion.video,
+            image: selectedQuestion.image
         };
     };
 
@@ -175,8 +264,8 @@ export default function Stage() {
         const newQuestion = generateRandomQuestion();
         setCurrentQuestion(newQuestion);
         setIsCorrect(false);
-        setMqttData(''); // รีเซ็ตข้อมูล MQTT
-        setLastMqttData(''); // รีเซ็ตข้อมูล MQTT ครั้งก่อน
+        setMqttData('');
+        setLastMqttData('');
     };
 
     useEffect(() => {
@@ -215,7 +304,7 @@ export default function Stage() {
                 alignItems: 'center',
                 gap: '10px'
             }}>
-                {/* วิดีโอตัวอย่าง */}
+                {/* วิดีโอหรือรูปภาพตัวอย่าง */}
                 <div style={{ 
                     display: 'flex', 
                     justifyContent: 'center',
@@ -223,31 +312,51 @@ export default function Stage() {
                 }}>
                     {currentQuestion && (
                         <div style={{ textAlign: 'center' }}>
-                            <video
-                                key={currentQuestion.video}
-                                src={currentQuestion.video}
-                                width={450}          
-                                height={350}         
-                                autoPlay             
-                                loop                 
-                                muted                
-                                playsInline          
-                                controls={false}     
-                                preload="auto"       
-                                style={{ 
-                                    borderRadius: '15px', 
-                                    objectFit: 'cover',
-                                    backgroundColor: '#000',
-                                    border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
-                                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
-                                }}
-                                onError={(e) => {
-                                    console.error('Video loading error:', e);
-                                }}
-                            >
-                                <source src={currentQuestion.video} type="video/mp4" />
-                                เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
-                            </video>
+                            {currentQuestion.video ? (
+                                <video
+                                    key={currentQuestion.video}
+                                    src={currentQuestion.video}
+                                    width={450}          
+                                    height={350}         
+                                    autoPlay             
+                                    loop                 
+                                    muted                
+                                    playsInline          
+                                    controls={false}     
+                                    preload="auto"       
+                                    style={{ 
+                                        borderRadius: '15px', 
+                                        objectFit: 'cover',
+                                        backgroundColor: '#000',
+                                        border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
+                                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                                    }}
+                                    onError={(e) => {
+                                        console.error('Video loading error:', e);
+                                    }}
+                                >
+                                    <source src={currentQuestion.video} type="video/mp4" />
+                                    เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                                </video>
+                            ) : currentQuestion.image ? (
+                                <img
+                                    key={currentQuestion.image}
+                                    src={currentQuestion.image}
+                                    width={450}          
+                                    height={350}         
+                                    alt={currentQuestion.question}
+                                    style={{ 
+                                        borderRadius: '15px', 
+                                        objectFit: 'cover',
+                                        backgroundColor: '#000',
+                                        border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
+                                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                                    }}
+                                    onError={(e) => {
+                                        console.error('Image loading error:', e);
+                                    }}
+                                />
+                            ) : null}
                         </div>
                     )}
                 </div>
@@ -260,7 +369,7 @@ export default function Stage() {
                         color: isCorrect ? 'var(--green)' : 'var(--boldskyblue)',
                         textShadow: '2px 2px 4px rgba(0,0,0,0.1)'
                     }}>
-                        {currentQuestion?.correctAnswer || 'กำลังโหลด...'}
+                        {currentQuestion?.question || 'กำลังโหลด...'}
                     </h2>
                     <h3 style={{ 
                         fontSize: '20px',
@@ -284,7 +393,7 @@ export default function Stage() {
                                 margin: '0',
                                 fontWeight: 'bold'
                             }}>
-                                คำตอบล่าสุด : {mqttData || 'รอข้อมูล...'}
+                                คำตอบล่าสุด : {mqttData ? getQuestionFromAnswer(mqttData) : 'รอข้อมูล...'}
                             </p>
                         </div>             
                 </div>
