@@ -116,77 +116,6 @@ export default function Stage() {
             hint: "คำปฏิเสธ",
             video: "/chapter/stage1/13.mp4",
         },
-        // ตัวเลข 1-10
-        {
-            id: 14,
-            question: "1",
-            answer: "1",
-            hint: "หนึ่ง",
-            image: "/chapter/stage2/1.png",
-        },
-        {
-            id: 15,
-            question: "2",
-            answer: "2",
-            hint: "สอง",
-            image: "/chapter/stage2/2.png",
-        },
-        {
-            id: 16,
-            question: "3",
-            answer: "3",
-            hint: "สาม",
-            image: "/chapter/stage2/3.png",
-        },
-        {
-            id: 17,
-            question: "4",
-            answer: "4",
-            hint: "สี่",
-            image: "/chapter/stage2/4.png",
-        },
-        {
-            id: 18,
-            question: "5",
-            answer: "5",
-            hint: "ห้า",
-            image: "/chapter/stage2/5.png",
-        },
-        {
-            id: 19,
-            question: "6",
-            answer: "6",
-            hint: "หก",
-            image: "/chapter/stage2/6.png",
-        },
-        {
-            id: 20,
-            question: "7",
-            answer: "7",
-            hint: "เจ็ด",
-            image: "/chapter/stage2/7.png",
-        },
-        {
-            id: 21,
-            question: "8",
-            answer: "8",
-            hint: "แปด",
-            image: "/chapter/stage2/8.png",
-        },
-        {
-            id: 22,
-            question: "9",
-            answer: "9",
-            hint: "เก้า",
-            image: "/chapter/stage2/9.png",
-        },
-        {
-            id: 23,
-            question: "10",
-            answer: "10",
-            hint: "สิบ",
-            image: "/chapter/stage2/10.png",
-        },
     ];
 
     const fetchMqttData = async () => {
@@ -255,8 +184,7 @@ export default function Stage() {
             correctAnswer: selectedQuestion.answer,
             question: selectedQuestion.question,
             hint: selectedQuestion.hint,
-            video: selectedQuestion.video,
-            image: selectedQuestion.image
+            video: selectedQuestion.video
         };
     };
 
@@ -292,7 +220,6 @@ export default function Stage() {
                     <AiOutlineLeft size={35} className="back-button" />
                 </button>
 
-
                 <div style={{ width: '35px' }}></div>
             </div>
 
@@ -304,7 +231,7 @@ export default function Stage() {
                 alignItems: 'center',
                 gap: '10px'
             }}>
-                {/* วิดีโอหรือรูปภาพตัวอย่าง */}
+                {/* วิดีโอตัวอย่าง */}
                 <div style={{ 
                     display: 'flex', 
                     justifyContent: 'center',
@@ -312,51 +239,31 @@ export default function Stage() {
                 }}>
                     {currentQuestion && (
                         <div style={{ textAlign: 'center' }}>
-                            {currentQuestion.video ? (
-                                <video
-                                    key={currentQuestion.video}
-                                    src={currentQuestion.video}
-                                    width={450}          
-                                    height={350}         
-                                    autoPlay             
-                                    loop                 
-                                    muted                
-                                    playsInline          
-                                    controls={false}     
-                                    preload="auto"       
-                                    style={{ 
-                                        borderRadius: '15px', 
-                                        objectFit: 'cover',
-                                        backgroundColor: '#000',
-                                        border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
-                                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
-                                    }}
-                                    onError={(e) => {
-                                        console.error('Video loading error:', e);
-                                    }}
-                                >
-                                    <source src={currentQuestion.video} type="video/mp4" />
-                                    เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
-                                </video>
-                            ) : currentQuestion.image ? (
-                                <img
-                                    key={currentQuestion.image}
-                                    src={currentQuestion.image}
-                                    width={450}          
-                                    height={350}         
-                                    alt={currentQuestion.question}
-                                    style={{ 
-                                        borderRadius: '15px', 
-                                        objectFit: 'cover',
-                                        backgroundColor: '#000',
-                                        border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
-                                        boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
-                                    }}
-                                    onError={(e) => {
-                                        console.error('Image loading error:', e);
-                                    }}
-                                />
-                            ) : null}
+                            <video
+                                key={currentQuestion.video}
+                                src={currentQuestion.video}
+                                width={450}          
+                                height={350}         
+                                autoPlay             
+                                loop                 
+                                muted                
+                                playsInline          
+                                controls={false}     
+                                preload="auto"       
+                                style={{ 
+                                    borderRadius: '15px', 
+                                    objectFit: 'cover',
+                                    backgroundColor: '#000',
+                                    border: `3px solid ${isCorrect ? 'var(--green)' : 'var(--lightgray)'}`,
+                                    boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+                                }}
+                                onError={(e) => {
+                                    console.error('Video loading error:', e);
+                                }}
+                            >
+                                <source src={currentQuestion.video} type="video/mp4" />
+                                เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
+                            </video>
                         </div>
                     )}
                 </div>
@@ -379,23 +286,21 @@ export default function Stage() {
                         ({currentQuestion?.hint || ''})
                     </h3>
                     
-                   
-                       
-                        <div style={{
-                            padding: '10px',
-                            background: 'rgba(255, 255, 255, 0.8)',
-                            borderRadius: '8px',
-                            border: '1px solid rgba(34, 197, 94, 0.2)'
+                    <div style={{
+                        padding: '10px',
+                        background: 'rgba(255, 255, 255, 0.8)',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(34, 197, 94, 0.2)'
+                    }}>
+                        <p style={{
+                            color: 'var(--foreground)', 
+                            fontSize: '16px',
+                            margin: '0',
+                            fontWeight: 'bold'
                         }}>
-                            <p style={{
-                                color: 'var(--foreground)', 
-                                fontSize: '16px',
-                                margin: '0',
-                                fontWeight: 'bold'
-                            }}>
-                                คำตอบล่าสุด : {mqttData ? getQuestionFromAnswer(mqttData) : 'รอข้อมูล...'}
-                            </p>
-                        </div>             
+                            คำตอบล่าสุด : {mqttData ? getQuestionFromAnswer(mqttData) : 'รอข้อมูล...'}
+                        </p>
+                    </div>             
                 </div>
 
                 {/* ปุ่มควบคุม */}
@@ -433,43 +338,6 @@ export default function Stage() {
                         สุ่มคำถามใหม่
                     </button>
                 </div>
-
-                {/* ข้อมูลการใช้งาน */}
-                {/* <div style={{
-                    padding: '20px',
-                    background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1))',
-                    borderRadius: '15px',
-                    textAlign: 'center',
-                    maxWidth: '600px',
-                    border: '1px solid rgba(59, 130, 246, 0.2)'
-                }}>
-                    <h4 style={{ 
-                        color: 'var(--foreground)', 
-                        margin: '0 0 15px 0',
-                        fontSize: '20px',
-                        fontWeight: 'bold'
-                    }}>
-                        วิธีการใช้งาน
-                    </h4>
-                    <div style={{
-                        textAlign: 'left',
-                        color: 'var(--coolgray)',
-                        fontSize: '16px',
-                        lineHeight: '1.6'
-                    }}>
-                        <ul style={{
-                            margin: '0 0 15px 0',
-                            paddingLeft: '25px'
-                        }}>
-                            <li style={{ marginBottom: '8px' }}>ระบบตรวจสอบข้อมูลจาก API อัตโนมัติทุก 1 วินาที</li>
-                            <li style={{ marginBottom: '8px' }}>เช็คคำตอบเฉพาะเมื่อมีข้อมูลใหม่จาก API</li>
-                            <li style={{ marginBottom: '8px' }}>ดูวิดีโอและทำท่าภาษามือตามที่เห็น</li>
-                            <li style={{ marginBottom: '8px' }}>เมื่อระบบตรวจพบคำตอบถูกต้อง จะไปคำถามใหม่อัตโนมัติ</li>
-                            <li style={{ marginBottom: '8px' }}>หากตอบผิด ระบบจะแจ้งเตือนและให้ลองใหม่</li>
-                            <li>กดปุ่ม "คำถามใหม่" เพื่อสุ่มคำศัพท์ใหม่ได้ตลอดเวลา</li>
-                        </ul>
-                    </div>
-                </div> */}
             </div>
         </main>
     );

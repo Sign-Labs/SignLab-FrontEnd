@@ -175,13 +175,13 @@ export default function Profile() {
                     disabled={!editMode}
                     className={`profileInput${editMode ? " editable" : ""}`}
                 />
-                <button
+                {/* <button
                     type="button"
                     onClick={editMode ? handleSave : handleEdit}
                     className="profileButton"
                 >
                     {editMode ? "บันทึก" : "แก้ไข"}
-                </button>
+                </button> */}
             </form>
         </div>
     );

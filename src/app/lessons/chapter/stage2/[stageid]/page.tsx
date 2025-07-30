@@ -23,6 +23,8 @@ export default function Stage() {
     const [currentRound, setCurrentRound] = useState(1); 
     const [gameQuestions, setGameQuestions] = useState<any[]>([]); 
     const [life, setlife] = useState(5); 
+    const [isListening, setIsListening] = useState(false);
+    const [mqttData, setMqttData] = useState<string>('');
 
     const params = useParams();
     const stageId = Array.isArray(params.stageid) ? parseInt(params.stageid[0]) : parseInt(params.stageid as string);
@@ -67,6 +69,86 @@ export default function Stage() {
         { id: 33, question: "10,000,000", hint: "สิบล้าน", image: "/chapter/stage2/33.png" },
         { id: 34, question: "100,000,000", hint: "หนึ่งร้อยล้าน", image: "/chapter/stage2/34.png" },
     ];
+
+    const mqttToAnswerMap: { [key: string]: string } = {
+        "one": "1",
+        "two": "2", 
+        "three": "3",
+        "four": "4",
+        "five": "5",
+        "six": "6",
+        "seven": "7",
+        "eight": "8",
+        "nine": "9",
+        "ten": "10",
+        "eleven": "11",
+        "twelve": "12",
+        "thirteen": "13",
+        "fourteen": "14",
+        "fifteen": "15",
+        "sixteen": "16",
+        "seventeen": "17",
+        "eighteen": "18",
+        "nineteen": "19",
+        "twenty": "20",
+        "thirty": "30",
+        "forty": "40",
+        "fifty": "50",
+        "sixty": "60",
+        "seventy": "70",
+        "eighty": "80",
+        "ninety": "90",
+        "hundred": "100",
+        "thousand": "1,000",
+        "ten_thousand": "10,000",
+        "hundred_thousand": "100,000",
+        "million": "1,000,000",
+        "ten_million": "10,000,000",
+        "hundred_million": "100,000,000"
+    };
+
+    // ← ฟังก์ชันดึงข้อมูลจาก API
+    const fetchMqttData = async () => {
+        try {
+            const response = await fetch('http://130.33.96.46:3000/api/mqtt/answer');
+            const data = await response.json();
+            
+            if (data && data.data) {
+                setMqttData(data.data);
+                console.log("MQTT Data received:", data.data);
+                
+                const mappedAnswer = mqttToAnswerMap[data.data.toLowerCase()];
+                if (mappedAnswer && mappedAnswer === correctAnswer) {
+                    console.log("MQTT Answer matched! Auto-advancing...");
+                    checkAnswer(mappedAnswer);
+                }
+            } else {
+                setMqttData('ไม่มีข้อมูล');
+            }
+        } catch (error) {
+            console.error("Error fetching MQTT data:", error);
+            setMqttData('ไม่สามารถเชื่อมต่อ API ได้');
+        }
+    };
+
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        
+        if (isListening) {
+            fetchMqttData();
+            interval = setInterval(() => {
+                fetchMqttData();
+            }, 2000);
+        } else {
+            setMqttData('');
+        }
+        
+        return () => {
+            if (interval) {
+                clearInterval(interval);
+            }
+        };
+    }, [isListening, correctAnswer]);
 
     const generateChoices = (correctAnswer: string) => {
         const wrongAnswers = questionData
@@ -181,6 +263,16 @@ export default function Stage() {
         startNewGame();
     };
 
+    // ← ฟังก์ชันเปิด/ปิดการเชื่อมต่อ API
+    const toggleMqttListening = () => {
+        setIsListening(prev => !prev);
+        if (!isListening) {
+            showSuccessPopup("เริ่มเชื่อมต่อกับถุงมือ");
+        } else {
+            showSuccessPopup("หยุดเชื่อมต่อกับถุงมือ");
+        }
+    };
+
     useEffect(() => {
         startNewGame();
     }, []);
@@ -252,6 +344,20 @@ export default function Stage() {
                     <h2>รอบที่ {currentRound} จาก 5</h2>
                     <h3>รูปนี้คือสัญลักษณ์อะไร?</h3>
                     <h4 className='bold font_style' style={{color:"var(--red)"}} >สามารถตอบได้อีก {life} ครั้ง</h4>
+                    
+                    {/* ← แสดงข้อมูลจาก API อย่างง่าย */}
+                    {isListening && (
+                        <p style={{
+                            color: 'var(--foreground)', 
+                            fontSize: '14px',
+                            margin: '10px 0',
+                            padding: '5px',
+                            background: 'rgba(0,0,0,0.1)',
+                            borderRadius: '5px'
+                        }}>
+                            <strong>ข้อมูลจากถุงมือ:</strong> {mqttData || 'ไม่มีข้อมูล'}
+                        </p>
+                    )}
                 </div>
 
                 <div style={{ 
@@ -280,7 +386,24 @@ export default function Stage() {
                     ))}
                 </div>
 
+                {/* ← เหลือแค่ปุ่มที่จำเป็น */}
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    <button 
+                        onClick={toggleMqttListening}
+                        style={{
+                            padding: '10px 20px',
+                            background: isListening ? 'var(--red)' : '#2196f3',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <p className="font-botton font-style">
+                            {isListening ? ' หยุดเชื่อมต่อถุงมือ' : ' เชื่อมต่อถุงมือ'}
+                        </p>
+                    </button>
+                    
                     <button 
                         onClick={() => showSuccessPopup(`คำใบ้: ${currentQuestionData?.hint || ''}`)}
                         style={{
