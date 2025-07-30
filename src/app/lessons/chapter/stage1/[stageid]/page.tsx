@@ -5,8 +5,6 @@ import { useParams,useRouter } from 'next/navigation';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigation } from '@/app/hooks/useNavigation';
 import { ImCross } from "react-icons/im";
-// ลบ import Image
-// import Image from 'next/image';
 import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from '@/app/components/Popup';
 import '@/app/css/component.css';
 import '@/app/css/container.css';
@@ -32,7 +30,6 @@ export default function Stage() {
     console.log("Chapter:", chapterNumber);
     console.log("Stage ID:", stageId);
 
-    // เปลี่ยน questionData ให้ใช้ video แทน image
    const questionData = [
     {
         id: 1,
