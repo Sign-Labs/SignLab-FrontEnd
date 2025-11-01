@@ -23,20 +23,6 @@ axiosInstance.interceptors.response.use(
 );
 
 
-// ⚠️ Interceptor สำหรับจัดการ error response global
-axiosInstance.interceptors.response.use(
-  response => response,
-  error => {
-    // ถ้า token หมดอายุ หรือไม่ได้รับอนุญาต
-    if (error.response?.status === 401) {
-      console.warn("Unauthorized! Redirecting to login...");
-      localStorage.removeItem("token");
-      if (typeof window !== "undefined") {
-        window.location.href = "/";
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+
 
 export default axiosInstance;
