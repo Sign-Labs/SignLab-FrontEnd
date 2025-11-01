@@ -7,16 +7,21 @@ const axiosInstance = axios.create({
 });
 
 // 🔐 แนบ token โดยอัตโนมัติ
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401) {
+      console.warn("Unauthorized! Redirecting to login...");
+
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+        window.location.href = "/";
+      }
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
+    return Promise.reject(error);
+  }
 );
+
 
 // ⚠️ Interceptor สำหรับจัดการ error response global
 axiosInstance.interceptors.response.use(
