@@ -1,35 +1,36 @@
 "use client";
 export const dynamic = "force-dynamic";
+
 import { AiOutlineLeft } from "react-icons/ai";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { showLoadingPopup, showSuccessPopup, showErrorPopup, showConfirmPopup, removeExistingPopup } from "../components/Popup";
-import "./../css/component.css";
-import "./../css/container.css";
 import axios from "../axios";
+import "../css/component.css";
+import "../css/container.css";
 
-export default function Otp() {
+export default function OtpPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [email, setEmail] = useState("");
-  const [parsed, setParsed] = useState<any>(null);
   const [registrationData, setRegistrationData] = useState("");
 
+  // ✅ State สำหรับดึง query params หลัง client render
   useEffect(() => {
-    const data = searchParams.get("data");
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get("data");
     if (!data) return;
 
     try {
       const decoded = decodeURIComponent(data);
-      const parsedObj = JSON.parse(decoded);
-      setParsed(parsedObj);
-      setEmail(parsedObj.email);
+      const parsed = JSON.parse(decoded);
+      setEmail(parsed.email);
       setRegistrationData(data);
     } catch (err) {
       console.error("Invalid query data", err);
     }
-  }, [searchParams]);
+  }, []);
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length <= 1) {
@@ -45,13 +46,13 @@ export default function Otp() {
   };
 
   const handleResendOtp = async () => {
-    if (!parsed?.email) return;
+    if (!email) return;
 
     showConfirmPopup("ส่ง OTP ใหม่", "ต้องการส่งรหัส OTP ใหม่หรือไม่?", async () => {
       showLoadingPopup("กำลังส่ง OTP", "กรุณารอสักครู่...");
       try {
         await axios.post("/otp-forget", {
-          email: parsed.email,
+          email,
           purpose: "reset",
         });
         removeExistingPopup();
@@ -66,7 +67,7 @@ export default function Otp() {
 
   const handleSubmit = async () => {
     const otpCode = otp.join("");
-    if (otpCode.length !== 6 || !parsed?.email) {
+    if (otpCode.length !== 6 || !email) {
       showErrorPopup("ข้อมูลไม่ถูกต้อง", "กรุณากรอก OTP ให้ครบ 6 หลัก");
       return;
     }
@@ -74,11 +75,7 @@ export default function Otp() {
     showLoadingPopup("กำลังตรวจสอบ", "กรุณารอสักครู่...");
 
     try {
-      await axios.post("/verify-otp", {
-        email: parsed.email,
-        otp: otpCode,
-      });
-
+      await axios.post("/verify-otp", { email, otp: otpCode });
       removeExistingPopup();
       showSuccessPopup("สำเร็จ", "กรุณาเปลี่ยนรหัสผ่าน", () => {
         router.push(`/change-password?data=${registrationData}`);
@@ -101,6 +98,7 @@ export default function Otp() {
           <AiOutlineLeft size={45} className="back-button" />
         </button>
       </div>
+
       <div className="otp_container_center">
         <div className="otp_white_box">
           <div>
@@ -137,9 +135,7 @@ export default function Otp() {
               className="otp_resend_link"
               style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
             >
-              <h1 className="font_description">
-                <p className="otp_resend_link bold">ส่งอีกครั้ง</p>
-              </h1>
+              <p className="otp_resend_link bold">ส่งอีกครั้ง</p>
             </button>
           </h1>
 
